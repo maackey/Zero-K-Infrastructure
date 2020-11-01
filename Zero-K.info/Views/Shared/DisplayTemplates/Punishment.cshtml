@@ -36,7 +36,7 @@
     <div class="header">
         @if (p.MessageOnly)
         {
-            if (Global.AccountID == p.AccountID)
+            if (Global.AccountID == p.AccountID || Global.IsModerator)
             {
                 @*<h4>Message received from moderators, click @Html.ActionLink("here", "Chat", "Lobby", new { User = ZkData.GlobalConst.NightwatchName }, null) to see it</h4>*@
                 <h3><i class="fa fa-moon-o"></i> MESSAGE: @p.Reason</h3>
