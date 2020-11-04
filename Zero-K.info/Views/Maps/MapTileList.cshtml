@@ -97,13 +97,10 @@
 
 @foreach (var m in Model)
 {
-    int mapsize = 256;
-    float maxdim = Math.Max((int)m.MapHeight, (int)m.MapWidth);
-    int width = (int)Math.Truncate(mapsize * (int)m.MapWidth / maxdim);
-    int height = (int)Math.Truncate(mapsize * (int)m.MapHeight / maxdim);
+    var size = m.ScaledImageSize(256);
 
     <a class="map-link" href="@Url.Action("Detail", new { id = m.ResourceID })" 
-       style="background: rgba(0,0,0,0.25) url('/Resources/@m.ThumbnailName') no-repeat center; background-size: @(width)px @(height)px;">
+       style="background: rgba(0,0,0,0.25) url('/Resources/@m.ThumbnailName') no-repeat center; background-size: @(size.Width)px @(size.Height)px;">
         <div class="map-tags">
             @{Html.RenderPartial("MapTags", m);}
         </div>

@@ -165,6 +165,102 @@ function ToggleExtra(id) {
     }
 }
 
+function InitResourceRating() {
+    // prevent unnecessary mouseover calls
+    var mouseHovering = false;
+
+    // initialize all ratings with zero stars
+    $(".rating .level .fa").addClass("fa-star-o");
+
+    // fill in ratings with values
+    $(".rating .level.selected .fa").removeClass("fa-star-o").addClass("fa-star");
+
+    // add mouse-over events
+    $(".rating .level").hover(
+        function () {
+            // apply hover class when mouse over
+            if (mouseHovering) return;
+            mouseHovering = true;
+
+            var parent = $(this).parent();
+            var current = $(this);
+
+            if (current.hasClass("l1")) {
+                parent.children(".l1").addClass("hover");
+            } else if (current.hasClass("l2")) {
+                parent.children(".l1, .l2").addClass("hover");
+            } else if (current.hasClass("l3")) {
+                parent.children(".l1, .l2, .l3").addClass("hover");
+            } else if (current.hasClass("l4")) {
+                parent.children(".l1, .l2, .l3, .l4").addClass("hover");
+            } else if (current.hasClass("l5")) {
+                parent.children(".l1, .l2, .l3, .l4, .l5").addClass("hover");
+            }
+        },
+        function () {
+            // remove hover class when mouse out
+            $(".rating .level").removeClass("hover");
+            mouseHovering = false;
+        }
+    );
+
+    // add click events
+    $(".rating .level").click(function () {
+        var parent = $(this).parent();
+        var current = $(this);
+        var ratingValue = 0;
+
+        if (current.hasClass("l1")) {
+            parent.children(".l1").addClass("selected");
+            ratingValue = 1;
+        } else if (current.hasClass("l2")) {
+            parent.children(".l1, .l2").addClass("selected");
+            ratingValue = 2;
+        } else if (current.hasClass("l3")) {
+            parent.children(".l1, .l2, .l3").addClass("selected");
+            ratingValue = 3;
+        } else if (current.hasClass("l4")) {
+            parent.children(".l1, .l2, .l3, .l4").addClass("selected");
+            ratingValue = 4;
+        } else if (current.hasClass("l5")) {
+            parent.children(".l1, .l2, .l3, .l4, .l5").addClass("selected");
+            ratingValue = 5;
+        }
+
+        // call API to rate map with value
+        /*
+         * ?
+         $("#rating").stars({
+			callback: function (ui, type, value) {
+				$.get('@Url.Action("Rate", new { id = m.ResourceID })?rating=' + value, function (ret) { if (ret != "") alert(ret); });
+			}
+		});
+         */
+    });
+}
+
+function InitToggleSwitch() {
+
+    $(".switch3 .clickable").click(function (self) {
+        var parent = $(this).parent();
+        var input = parent.children("input");
+        var slider = parent.children(".slider");
+
+        if ($(this).hasClass("left")) {
+            slider.toggleClass("left");
+            input.val("false");
+        } else if ($(this).hasClass("right")) {
+            slider.toggleClass("right");
+            input.val("true");
+        }
+        if (slider.hasClass("left") && slider.hasClass("right")) {
+            slider.removeClass("left");
+            slider.removeClass("right");
+            input.val("");
+        }
+    });
+}
+
 function openModal(id) {
     var modal = $("#" + id);
     console.log("open modal", id, modal);

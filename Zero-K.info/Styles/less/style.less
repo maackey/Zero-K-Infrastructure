@@ -122,7 +122,7 @@ input[type=button]:hover, input[type=submit]:hover, button:hover {
 #modal-overlay {
     display: none;
     position: fixed;
-    background: rgba(0,0,0,0.5);
+    background: rgba(0,0,0,0.8);
     top: 0;
     left: 0;
     right: 0;
@@ -213,10 +213,20 @@ input[type=button]:hover, input[type=submit]:hover, button:hover {
     .modal-close {
         position: absolute;
         color: @copy;
-        top: 1em;
-        right: 1em;
+        top: 0;
+        right: 0;
+        padding: 1em;
         cursor: pointer;
         transition: 0.5s;
+    }
+    @media screen and (max-width: 800px) {
+        left: 10%;
+        right: 10%;
+    }
+    @media screen and (max-width: 650px) {
+        left: 0;
+        right: 0;
+        border-radius: 0;
     }
 }
 .modal:hover {
@@ -227,6 +237,7 @@ input[type=button]:hover, input[type=submit]:hover, button:hover {
         color: @copy;
     }
 }
+
 
 // TODO: move to forum style
 .filter-section {

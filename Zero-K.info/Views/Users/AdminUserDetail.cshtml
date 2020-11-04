@@ -82,6 +82,11 @@
     .header-summary {
         float: right;
     }
+
+    #list-ipaddresses, #list-smurfs, #list-userids {
+        max-height: 80vw;
+        overflow-y: scroll;
+    }
 </style>
 
 <div id="summarytransition">
@@ -333,8 +338,14 @@
                 <i class="fa fa-close modal-close"></i>
                 <form method="post" action="@Url.Action("ChangeAccountDeleted", "Users", new { accountID = Model.AccountID })">
                     @Html.AntiForgeryToken()
-                    <label for="isDeleted">Hide Account</label>
-                    @Html.CheckBox("isDeleted")
+                    <div>
+                        <label class="switch">
+                            <input id="isDeleted" name="isDeleted" type="checkbox" />
+                            <span class="slider"></span>
+                        </label>
+                        <label for="isDeleted">Hide Account</label>
+                        @*@Html.CheckBox("isDeleted")*@
+                    </div>
                     <label for="alias">Move all games to account:</label>
                     @Html.TextBox("alias")
                     <input type="submit" value="Hide / Transfer Account" />

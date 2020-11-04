@@ -6,59 +6,16 @@
 }
 
 <script>
-    var ratingHover = false;
     $(document).ready(function () {
-        $(".clickable").click(function (self) {
-            var parent = $(this).parent();
-            var input = parent.children("input");
-            var slider = parent.children(".slider");
-
-            if ($(this).hasClass("left")) {
-                slider.toggleClass("left");
-                input.val("false");
-            } else if ($(this).hasClass("right")) {
-                slider.toggleClass("right");
-                input.val("true");
-            }
-            if (slider.hasClass("left") && slider.hasClass("right")) {
-                slider.removeClass("left");
-                slider.removeClass("right");
-                input.val("");
-            }
-        });
-
-        $(".rating .level").hover(
-            function () {
-                if (ratingHover) return;
-                ratingHover = true;
-                // over
-                var parent = $(this).parent();
-                var current = $(this);
-
-                if (current.hasClass("l1")) {
-                    parent.children(".l1").addClass("hover");
-                } else if (current.hasClass("l2")) {
-                    parent.children(".l2").addClass("hover");
-                } else if (current.hasClass("l3")) {
-                    parent.children(".l3").addClass("hover");
-                } else if (current.hasClass("l4")) {
-                    parent.children(".l4").addClass("hover");
-                } else if (current.hasClass("l5")) {
-                    parent.children(".l5").addClass("hover");
-                } 
-            },
-            function () {
-                // out
-                var parent = $(this).parent();
-                parent.children(".level").removeClass("hover");
-                ratingHover = false;
-            }
-        );
+        InitToggleSwitch();
+        InitResourceRating();
     });
 </script>
 <div id="maps" class="content">
     <div class="maplist">
         @* TODO: for handheld devices, replace hover effects with double tap *@
+
+        <h1 class="admin-extra" onclick="ToggleExtra('ajaxScrollForm')">Map Filters</h1>
         <form id="ajaxScrollForm" class="mapfilters" method="post" action="@Url.Action("Index")">
             <div class="filtergroup">
 

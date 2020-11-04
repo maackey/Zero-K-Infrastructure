@@ -1,13 +1,9 @@
 ﻿@import "colors.less";
 
 #maps {
-    background: rgba(0,0,0,0.9);
+    background: @background;
     font-family: "Xolonium", sans-serif;
     padding: 1em;
-
-    select, input {
-        width: 100%;
-    }
 
     .mapfilters {
         display: flex;
@@ -48,5 +44,32 @@
                 width: 100%;
             }
         }
+    }
+}
+
+#mapdetail {
+    h1, .author, .tags, #map-preview {
+        text-align: center;
+    }
+
+    .texture, .heightmap {
+        display: inline-block;
+        cursor: pointer;
+        img {
+            max-width: 100%;
+        }
+    }
+
+    .tags {
+        display: flex;
+        justify-content: center;
+        /*justify-content: space-around;*/
+    }
+
+    .tag {
+        background: @background;
+        display: inline-block;
+        padding: 0.5em;
+        margin: 1em 0.5em;
     }
 }

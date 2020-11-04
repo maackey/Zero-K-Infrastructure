@@ -1,49 +1,49 @@
- @model ZeroKWeb.Controllers.MapsController.MapDetailData
+@model ZeroKWeb.Controllers.MapsController.MapDetailData
 @using ZkData;
 @{
-	var m = Model.Resource;
-	var mi = Model.MapInfo;
-}
-@{
-	Page.Title = m.InternalName+ " map";
-	var size = m.ScaledImageSize(200);
+    Page.Title = Model.Resource.InternalName;
+    var m = Model.Resource;
+    var size = m.ScaledImageSize(200);
     var planet = m.Planets.FirstOrDefault(x => x.Galaxy.IsDefault);
 }
-<script type="text/javascript">
-	$(document).ready(function () {
-		$("#rating").stars({
-			callback: function (ui, type, value) {
-				$.get('@Url.Action("Rate", new { id = m.ResourceID })?rating=' + value, function (ret) { if (ret != "") alert(ret); });
-			}
-		});
-	});
-
+<script>
+    var aspectRatio = @m.MapSizeRatio;
+    $(document).ready(function () {
+        $(".heightmap").hide();
+        $(".texture").click(function () {
+            $(".heightmap").show();
+            $(this).hide();
+        });
+        $(".heightmap").click(function () {
+            $(".texture").show();
+            $(this).hide();
+        });
+    });
 </script>
-
-@Html.ActionLink("Back to List", "Index")
-<div class="">
-    <div id="maps" class="relative fleft" style="width: @(size.Width)px; height: @(3*size.Height+10)px; margin: 10px;">
-        <a href='/Resources/@(m.MinimapName)' class="">
-            <img src='/Resources/@(m.MinimapName)' style='width:@(size.Width)px; height:@(size.Height)px' class='js_zoom' />
-        </a>
-        <a href='/Resources/@(m.HeightmapName)' class="">
-            <img src='/Resources/@(m.HeightmapName)' style='width:@(size.Width)px; height:@(size.Height)px' class='js_zoom' />
-        </a>
+<div id="mapdetail" class="content">
+    <h1>@m.InternalName</h1>
+    <div class="author">
+        By @(string.IsNullOrEmpty(m.AuthorName) ? "Unknown" : m.AuthorName)
     </div>
-    <h2>@m.InternalName 
-	@if (m.MapSupportLevel >= MapSupportLevel.MatchMaker) { 
-        <img src="@Url.Content("/img/star_40_gold.png")" title="Matchmaking pool" alt="Matchmaking pool" />
-      } else if (m.MapSupportLevel >= MapSupportLevel.Featured) {
-        <img src="@Url.Content("/img/star_40_silver.png")" title="Featured" alt="Featured" />
-      } else if (m.MapSupportLevel >= MapSupportLevel.Supported) {
-        <img src="@Url.Content("/img/star_40_bronze.png")" title="Supported" alt="Supported" />
-      }
-	</h2>
-    @if (planet!=null) {
+    <div class="tags">
+        @{Html.RenderPartial("MapTags", m);}
+    </div>
+
+    <div id="map-preview">
+        <div class="texture">
+            <img src='/Resources/@(m.MinimapName)' />
+        </div>
+        <div class="heightmap">
+            <img src='/Resources/@(m.HeightmapName)' />
+        </div>
+    </div>
+
+    @Html.ActionLink("Back to List", "Index")
+    @if (planet != null)
+    {
         <h2>Planet @Html.PrintPlanet(planet)</h2>
     }
-    By @m.AuthorName<br />
-    
+
     <table>
         <tr>
             <td>Rating:</td>
@@ -67,38 +67,36 @@
             </td>
         </tr>
     </table>
-    @{Html.RenderPartial("MapTags", m);}<br />
-	
-    @if (mi != null) {
-        @mi.Description 
-        <table style="font-size: small">
-            <tr>
-                <td>Size: </td><td>@m.MapWidth x @m.MapHeight</td>
-            </tr>
-        </table>
+
+    @if (Model.MapInfo != null)
+    {
+        @Model.MapInfo.Description
     }
-	
+
     <h3 class="textbutton"><a href="@Html.PrintSpringLink("chat/battle@select_map:"+ m.ResourceID)">PLAY ON THIS MAP</a></h3><br />
     Downloads: @m.DownloadCount<br />
-    @if (!ZeroKWeb.Global.IsLobbyAccess) {
+    @if (!ZeroKWeb.Global.IsLobbyAccess)
+    {
         <div style="font-size: small">
-            @if (m.ResourceContentFiles.Where(x => x.LinkCount > 0).Any()) {
-	            <text>Manual downloads:</text><br />
-	            foreach (var l in m.ResourceContentFiles.Where(x => x.LinkCount > 0).Select(x => x.Links).SelectMany(x => x.Split('\n')).Shuffle()) {
-	                <a href='@l'>@l</a><br />
-	            }
+            @if (m.ResourceContentFiles.Where(x => x.LinkCount > 0).Any())
+            {
+                <text>Manual downloads:</text><br />
+                foreach (var l in m.ResourceContentFiles.Where(x => x.LinkCount > 0).Select(x => x.Links).SelectMany(x => x.Split('\n')).Shuffle())
+                {
+                    <a href='@l'>@l</a><br />
+                }
             }
             else
             {
-            	<font color="#FF0000"><b>WARNING, THIS MAP IS NOT AND WILL NOT BE DOWNLOADABLE.</b></font><br />
+                <font color="#FF0000"><b>WARNING, THIS MAP IS NOT AND WILL NOT BE DOWNLOADABLE.</b></font><br />
             }
         </div>
     }
-    
+
     @if (Model.Resource.SpringBattlesByMapResourceID.Any())
     {
         <div class="fleft border">
-            <h3>@Html.ActionLink("Last battles","Index","Battles")</h3>
+            <h3>@Html.ActionLink("Last battles", "Index", "Battles")</h3>
             @foreach (var b in Model.Resource.SpringBattlesByMapResourceID.OrderByDescending(x => x.SpringBattleID).Take(10))
             {
                 <small>@Html.PrintBattle(b)</small><br />
@@ -109,9 +107,9 @@
     <br class="clearfloat" />
     @if (ZeroKWeb.Global.IsModerator)
     {
-	
+
         <div style='border: 1px dashed teal; padding: 10px;'>
-            <b><a href="#" onclick="$('#divTag').toggle()" >TAG the MAP</a></b>
+            <b><a href="#" onclick="$('#divTag').toggle()">TAG the MAP</a></b>
             <div id="divTag">
                 @if (m.TaggedByAccountID != null)
                 {
@@ -121,43 +119,56 @@
                     @Html.AntiForgeryToken()
                     <table>
                         <tr>
-                            <td>Terrain:</td><td>@Html.Select("sea", typeof(Resource.WaterLevel), m.MapWaterLevel, "?")</td>
+                            <td>Terrain:</td>
+                            <td>@Html.Select("sea", typeof(Resource.WaterLevel), m.MapWaterLevel, "?")</td>
                         </tr>
                         <tr>
-                            <td>Hills:</td><td>@Html.Select("hills", typeof(Resource.Hill), m.MapHills, "?")</td>
+                            <td>Hills:</td>
+                            <td>@Html.Select("hills", typeof(Resource.Hill), m.MapHills, "?")</td>
                         </tr>
                         <tr>
-                            <td>Asymmetrical:</td><td>@Html.BoolSelect("assymetrical", m.MapIsAssymetrical, "?")</td>
+                            <td>Asymmetrical:</td>
+                            <td>@Html.BoolSelect("assymetrical", m.MapIsAssymetrical, "?")</td>
                         </tr>
                         <tr>
-                            <td title='Maps with special features, speedmetal, duck, greenfields etc.'>Special:</td><td>@Html.BoolSelect("special", m.MapIsSpecial, "?")</td>
+                            <td title='Maps with special features, speedmetal, duck, greenfields etc.'>Special:</td>
+                            <td>@Html.BoolSelect("special", m.MapIsSpecial, "?")</td>
                         </tr>
                         <tr>
-                            <td title='Is the map good for 1v1?'>1v1:</td><td>@Html.BoolSelect("is1v1", m.MapIs1v1, "?")</td>
+                            <td title='Is the map good for 1v1?'>1v1:</td>
+                            <td>@Html.BoolSelect("is1v1", m.MapIs1v1, "?")</td>
                         </tr>
                         <tr>
-                            <td title='Is the map good for teams'>Teams:</td><td>@Html.BoolSelect("isTeams", m.MapIsTeams, "?")</td>
+                            <td title='Is the map good for teams'>Teams:</td>
+                            <td>@Html.BoolSelect("isTeams", m.MapIsTeams, "?")</td>
                         </tr>
                         <tr>
-                            <td title='Is the map good for chickens?'>Chickens:</td><td>@Html.BoolSelect("chickens", m.MapIsChickens, "?")</td>
+                            <td title='Is the map good for chickens?'>Chickens:</td>
+                            <td>@Html.BoolSelect("chickens", m.MapIsChickens, "?")</td>
                         </tr>
                         <tr>
-                            <td title='Is the map good for FFA?'>FFA:</td><td>@Html.BoolSelect("ffa", m.MapIsFfa, "?")</td>
+                            <td title='Is the map good for FFA?'>FFA:</td>
+                            <td>@Html.BoolSelect("ffa", m.MapIsFfa, "?")</td>
                         </tr>
                         <tr><td>Max FFA team count</td><td>@Html.TextBox("ffaTeams", m.MapFFAMaxTeams)</td></tr>
                         <tr>
-                            <td>Author:</td><td>@Html.TextBox("author", m.AuthorName)</td>
+                            <td>Author:</td>
+                            <td>@Html.TextBox("author", m.AuthorName)</td>
                         </tr>
                         @if (ZeroKWeb.Global.IsModerator)
                         {
                             <tr>
-                                <td>Support level:</td><td>
+                                <td>Support level:</td>
+                                <td>
                                     @Html.DropDownList("mapSupportLevel", EnumHelper.GetSelectList(typeof(MapSupportLevel), m.MapSupportLevel))
                                 </td>
                             </tr>
                             <tr>
-                                <td>Planetwars image:</td><td valign="middle"><img src='/img/planets/@Model.Resource.MapPlanetWarsIcon' width='@Model.Resource.PlanetWarsIconSize' /> 
-                                @Html.ActionLink("pick new", "PlanetImageSelect", new { resourceID = Model.Resource.ResourceID })</td>
+                                <td>Planetwars image:</td>
+                                <td valign="middle">
+                                    <img src='/img/planets/@Model.Resource.MapPlanetWarsIcon' width='@Model.Resource.PlanetWarsIconSize' />
+                                    @Html.ActionLink("pick new", "PlanetImageSelect", new { resourceID = Model.Resource.ResourceID })
+                                </td>
                             </tr>
                         }
                     </table>

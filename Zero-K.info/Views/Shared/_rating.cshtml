@@ -9,7 +9,6 @@
     .rating {
         width: 100%;
         margin-bottom: 1em;
-
     }
 
     .level {
@@ -18,43 +17,26 @@
         text-align: center;
     }
 
-    .level .fa-heart {
-        display: none !important;
-        color: hotpink;
-    }
-    .level.selected .fa-heart {
-        display: inherit !important;
-    }
-    .level.selected .fa-heart-o {
-        display: none;
+    .level.selected {
+        color: magenta;
     }
 
-    .hover > .fa-heart-o {
-        display: inherit !important;
-        color: red !important;
+    .level.hover {
+        color: red;
     }
-    .hover > .fa-heart {
-        display: none !important;
-    }
-
 </style>
 
 <div class="rating">
     @* no space between divs to fix modern browser buggery *@
-    <div class="level l1 l2 l3 l4 l5">
-        <i class="fa fa-heart-o"></i>
-        <i class="fa fa-heart"></i>
-    </div><div class="level l2 l3 l4 l5">
-        <i class="fa fa-heart-o"></i>
-        <i class="fa fa-heart"></i>
-    </div><div class="level l3 l4 l5">
-        <i class="fa fa-heart-o"></i>
-        <i class="fa fa-heart"></i>
-    </div><div class="level l4 l5">
-        <i class="fa fa-heart-o"></i>
-        <i class="fa fa-heart"></i>
+    <div class="level l1">
+        <i class="fa"></i>
+    </div><div class="level l2">
+        <i class="fa"></i>
+    </div><div class="level l3">
+        <i class="fa"></i>
+    </div><div class="level l4">
+        <i class="fa"></i>
     </div><div class="level l5">
-        <i class="fa fa-heart-o"></i>
-        <i class="fa fa-heart"></i>
+        <i class="fa"></i>
     </div>
 </div>
