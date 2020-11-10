@@ -5,6 +5,8 @@
     var m = Model.Resource;
     var size = m.ScaledImageSize(200);
     var planet = m.Planets.FirstOrDefault(x => x.Galaxy.IsDefault);
+    var authors = string.IsNullOrEmpty(m.AuthorName) ? "Unknown" : m.AuthorName;
+    // TODO: parse author string and create clickable player names for authors
 }
 <script>
     var aspectRatio = @m.MapSizeRatio;
@@ -20,11 +22,39 @@
         });
     });
 </script>
+
+<div class="page-summary">
+    <div class="map-actions">
+        <a class="map-action back" href="@Url.Action("Index")">
+            <i class="fa fa-share fa-flip-horizontal"></i><span class="full-text">Back to List</span>
+        </a>
+        <a class="map-action playnow" href="@Html.PrintSpringLink("chat/battle@select_map:"+ m.ResourceID)">
+            <i class="fa fa-share"></i><span class="full-text">Play Now</span>
+        </a>
+    </div>
+    <div class="map-info">
+        <b>@m.InternalName</b> by @authors
+
+        <span class="popularity">
+            <i class="fa fa-download"></i><span class="full-text">Downloads:</span> @m.DownloadCount
+        </span>
+    </div>
+</div>
 <div id="mapdetail" class="content">
+    <div class="map-actions">
+        <a class="map-action back" href="@Url.Action("Index")">
+            <i class="fa fa-share fa-flip-horizontal"></i><span class="full-text">Back to List</span>
+        </a>
+        <a class="map-action playnow" href="@Html.PrintSpringLink("chat/battle@select_map:"+ m.ResourceID)">
+            <i class="fa fa-share"></i><span class="full-text">Play Now</span>
+        </a>
+    </div>
     <h1>@m.InternalName</h1>
     <div class="author">
-        By @(string.IsNullOrEmpty(m.AuthorName) ? "Unknown" : m.AuthorName)
+        By @authors
     </div>
+    <div id="summarytransition"></div>
+
     <div class="tags">
         @{Html.RenderPartial("MapTags", m);}
     </div>
@@ -38,79 +68,16 @@
         </div>
     </div>
 
-    @Html.ActionLink("Back to List", "Index")
-    @if (planet != null)
-    {
-        <h2>Planet @Html.PrintPlanet(planet)</h2>
-    }
-
-    <table>
-        <tr>
-            <td>Rating:</td>
-            <td valign="middle">
-                <div class="ratings">
-                    <div class="rating_all">
-                        @Html.Stars(StarType.GreenStarSmall, m.MapRating)
-                    </div>
-                    <div id='rating' class="rating_yours">
-                        @Html.Select("rating", new List<SelectOption>()
-                             {
-                                 new SelectOption() { Value = "1", Name = "Poor" },
-                                 new SelectOption() { Value = "2", Name = "Below average" },
-                                 new SelectOption() { Value = "3", Name = "Average" },
-                                 new SelectOption() { Value = "4", Name = "Good" },
-                                 new SelectOption() { Value = "5", Name = "Awesome" }
-                             },
-                   Model.MyRating.Rating.ToString())
-                    </div>
-                </div>
-            </td>
-        </tr>
-    </table>
-
     @if (Model.MapInfo != null)
     {
-        @Model.MapInfo.Description
+        <div>Description: @Model.MapInfo.Description</div>
     }
 
-    <h3 class="textbutton"><a href="@Html.PrintSpringLink("chat/battle@select_map:"+ m.ResourceID)">PLAY ON THIS MAP</a></h3><br />
-    Downloads: @m.DownloadCount<br />
-    @if (!ZeroKWeb.Global.IsLobbyAccess)
-    {
-        <div style="font-size: small">
-            @if (m.ResourceContentFiles.Where(x => x.LinkCount > 0).Any())
-            {
-                <text>Manual downloads:</text><br />
-                foreach (var l in m.ResourceContentFiles.Where(x => x.LinkCount > 0).Select(x => x.Links).SelectMany(x => x.Split('\n')).Shuffle())
-                {
-                    <a href='@l'>@l</a><br />
-                }
-            }
-            else
-            {
-                <font color="#FF0000"><b>WARNING, THIS MAP IS NOT AND WILL NOT BE DOWNLOADABLE.</b></font><br />
-            }
-        </div>
-    }
-
-    @if (Model.Resource.SpringBattlesByMapResourceID.Any())
-    {
-        <div class="fleft border">
-            <h3>@Html.ActionLink("Last battles", "Index", "Battles")</h3>
-            @foreach (var b in Model.Resource.SpringBattlesByMapResourceID.OrderByDescending(x => x.SpringBattleID).Take(10))
-            {
-                <small>@Html.PrintBattle(b)</small><br />
-            }
-        </div>
-    }
-
-    <br class="clearfloat" />
     @if (ZeroKWeb.Global.IsModerator)
     {
-
-        <div style='border: 1px dashed teal; padding: 10px;'>
-            <b><a href="#" onclick="$('#divTag').toggle()">TAG the MAP</a></b>
-            <div id="divTag">
+        <div class="admin content">
+            <h2 class="toggle" onclick="ToggleExtra('map-tags')">Set Map Tags</h2>
+            <div id="map-tags" class="hidden">
                 @if (m.TaggedByAccountID != null)
                 {
                     @: - Last tagged by @m.Account.Name
@@ -177,8 +144,65 @@
             </div>
         </div>
     }
+
+    @if (planet != null)
+    {
+        <h2>Planet @Html.PrintPlanet(planet)</h2>
+    }
+
+    @if (!ZeroKWeb.Global.IsLobbyAccess)
+    {
+        <div style="font-size: small">
+            @if (m.ResourceContentFiles.Where(x => x.LinkCount > 0).Any())
+            {
+                <text>Manual downloads:</text><br />
+                foreach (var l in m.ResourceContentFiles.Where(x => x.LinkCount > 0).Select(x => x.Links).SelectMany(x => x.Split('\n')).Shuffle())
+                {
+                    <a href='@l'>@l</a><br />
+                }
+            }
+            else
+            {
+                <font color="#FF0000"><b>WARNING, THIS MAP IS NOT AND WILL NOT BE DOWNLOADABLE.</b></font><br />
+            }
+        </div>
+    }
+
+    @if (Model.Resource.SpringBattlesByMapResourceID.Any())
+    {
+        <div class="border">
+            <h3>@Html.ActionLink("Last battles", "Index", "Battles")</h3>
+            @foreach (var b in Model.Resource.SpringBattlesByMapResourceID.OrderByDescending(x => x.SpringBattleID).Take(10))
+            {
+                <small>@Html.PrintBattle(b)</small><br />
+            }
+        </div>
+    }
+
+    @{Html.RenderPartial("CommentList", new ZeroKWeb.Models.CommentList() { Thread = Model.Resource.ForumThread, ActionData = new { resourceID = m.ResourceID, threadID = m.ForumThreadID } });}
+
 </div>
 
-@{Html.RenderPartial("CommentList", new ZeroKWeb.Models.CommentList() { Thread = Model.Resource.ForumThread, ActionData = new { resourceID = m.ResourceID, threadID = m.ForumThreadID } });}
-
-@Html.ActionLink("Back to List", "Index") 
+@*<table>
+        <tr>
+            <td>Rating:</td>
+            <td valign="middle">
+                <div class="ratings">
+                    <div class="rating_all">
+                        @Html.Stars(StarType.GreenStarSmall, m.MapRating)
+                    </div>
+                    <div id='rating' class="rating_yours">
+                        @Html.Select("rating", new List<SelectOption>()
+                             {
+                                 new SelectOption() { Value = "1", Name = "Poor" },
+                                 new SelectOption() { Value = "2", Name = "Below average" },
+                                 new SelectOption() { Value = "3", Name = "Average" },
+                                 new SelectOption() { Value = "4", Name = "Good" },
+                                 new SelectOption() { Value = "5", Name = "Awesome" }
+                             },
+                   Model.MyRating.Rating.ToString())
+                    </div>
+                </div>
+            </td>
+        </tr>
+    </table>*@

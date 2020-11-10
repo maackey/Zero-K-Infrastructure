@@ -164,6 +164,7 @@ input[type=button]:hover, input[type=submit]:hover, button:hover {
 // common classes
 .admin {
     border: 1px dotted red;
+    box-shadow: inset 0 0 5px red;
 }
 
 .center {
@@ -238,6 +239,10 @@ input[type=button]:hover, input[type=submit]:hover, button:hover {
     }
 }
 
+.toggle:hover {
+    background: fadein(@background-pop, 20%);
+    cursor: pointer;
+}
 
 // TODO: move to forum style
 .filter-section {

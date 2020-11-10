@@ -1,5 +1,39 @@
 ﻿@import "colors.less";
 
+#summarytransition {
+
+}
+
+.page-summary {
+    display: none;
+    background: rgba(0,0,0,0.8);
+    width: 100%;
+    padding: 1em;
+
+    @media screen and (max-width: 600px) {
+        .full-text {
+            display: none;
+        }
+    }
+}
+
+.summary-affixed {
+    display: inherit;
+    position: fixed;
+    left: 0;
+    right: 0;
+    z-index: 999;
+}
+
+.map-action {
+    i {
+        margin-right: 0.5em;
+    }
+}
+.map-action.playnow, .popularity {
+    float: right;
+}
+
 #maps {
     background: @background;
     font-family: "Xolonium", sans-serif;
@@ -37,7 +71,7 @@
         }
     }
 
-    @media (max-width: 700px) {
+    @media (max-width: 800px) {
         .mapfilters {
             flex-direction: column-reverse;
             .filtergroup {
@@ -52,24 +86,35 @@
         text-align: center;
     }
 
+    #map-preview, .texture, .heightmap, .texture img, .heightmap img {
+        width: 100%;
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
     .texture, .heightmap {
         display: inline-block;
         cursor: pointer;
-        img {
-            max-width: 100%;
+
+        @media screen and (max-width: 800px) {
+            img {
+                max-width: 80%;
+            }
         }
     }
 
     .tags {
         display: flex;
         justify-content: center;
-        /*justify-content: space-around;*/
+        flex-wrap: wrap;
+        margin: 0.5em 0em;
     }
 
     .tag {
         background: @background;
         display: inline-block;
         padding: 0.5em;
-        margin: 1em 0.5em;
+        margin: 0.5em;
     }
 }

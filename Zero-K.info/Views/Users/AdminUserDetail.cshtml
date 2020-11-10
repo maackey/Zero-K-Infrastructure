@@ -101,7 +101,7 @@
 </div>
 <div class="">
     <div class="group user-info">
-        <h1 class="admin-extra" onclick="ToggleExtra('list-userinfo')">
+        <h1 class="toggle" onclick="ToggleExtra('list-userinfo')">
             User Info
             <span class="header-summary">
                 <span class="smurfs"><i class="fa fa-user-secret"></i> @smurfs.Count()</span>
@@ -134,7 +134,7 @@
             <div><span class="infokey">Last Chat Read:</span> <span class="infovalue">@Model.LastChatRead</span></div>
 
             <div class="group">
-                <h3 class="admin-extra" onclick="ToggleExtra('list-smurfs')">
+                <h3 class="toggle" onclick="ToggleExtra('list-smurfs')">
                     Smurfs <span class="smurfs"><i class="fa fa-user-secret"></i> @smurfs.Count()</span>
                 </h3>
                 <div id="list-smurfs" class="hidden">
@@ -151,7 +151,7 @@
                 </div>
             </div>
             <div class="group">
-                <h3 class="admin-extra" onclick="ToggleExtra('list-userids')">
+                <h3 class="toggle" onclick="ToggleExtra('list-userids')">
                     User Ids <span class=""><i class="fa fa-drivers-license"></i> @Model.AccountUserIDs.Count()</span>
                 </h3>
                 <div id="list-userids" class="hidden">
@@ -181,7 +181,7 @@
                 </div>
             </div>
             <div class="group">
-                <h3 class="admin-extra" onclick="ToggleExtra('list-ipaddresses')">
+                <h3 class="toggle" onclick="ToggleExtra('list-ipaddresses')">
                     IP Addresses <span class=""><i class="fa fa-cloud"></i> @Model.AccountIPs.Count()</span>
                 </h3>
                 <div id="list-ipaddresses" class="hidden">
@@ -212,7 +212,7 @@
         </div>
     </div>
     <div class="group abuse-reports">
-        <h1 class="admin-extra" onclick="ToggleExtra('list-reports')">
+        <h1 class="toggle" onclick="ToggleExtra('list-reports')">
             Abuse reports <span class="header-summary playerreports"><i class="fa fa-flag"></i>@Model.AbuseReportsByAccountID.Count</span>
         </h1>
         <div id="list-reports" class="hidden">
@@ -227,7 +227,7 @@
         </div>
     </div>
     <div class="group penalties">
-        <h1 class="admin-extra" onclick="ToggleExtra('list-penalties')">
+        <h1 class="toggle" onclick="ToggleExtra('list-penalties')">
             Penalties
             <span class="header-summary">
                 <span class="warning"><i class="fa fa-warning"></i>@totalWarnings</span>
@@ -255,7 +255,7 @@
         </div>
     </div>
     <div class="group actions">
-        <h1 class="admin-extra" onclick="ToggleExtra('list-actions')">Actions</h1>
+        <h1 class="toggle" onclick="ToggleExtra('list-actions')">Actions</h1>
         <div id="list-actions">
 
             <input type="button" class="modal-open" data-modal="resetPassword" value="Reset Password" />

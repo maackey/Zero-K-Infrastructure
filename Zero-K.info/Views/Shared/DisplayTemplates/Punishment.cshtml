@@ -31,7 +31,7 @@
         modactionclass = "warning";
     }
 }
-<div class="moderator-action @modactionclass @(Global.IsModerator ? "admin-extra" : "")" 
+<div class="moderator-action @modactionclass @(Global.IsModerator ? "toggle" : "")" 
      onclick="ToggleExtra('admin-extra-@p.PunishmentID')">
     <div class="header">
         @if (p.MessageOnly)
