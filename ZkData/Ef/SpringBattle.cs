@@ -71,7 +71,8 @@ namespace ZkData
         [StringLength(200)]
         public string Title { get; set; }
         public int? WinnerTeamXpChange { get; set; }
-        public int? Rank { get; set; }
+        public int? MaxRank { get; set; }
+        public int? MinRank { get; set; }
 
         public SpringBattle()
         {
@@ -102,7 +103,8 @@ namespace ZkData
 
             if (IsRatedMatch())
             {
-                Rank = SpringBattlePlayers.Where(x => !x.IsSpectator).Select(x => x.Account.Rank).Max();
+                MaxRank = SpringBattlePlayers.Where(x => !x.IsSpectator).Select(x => x.Account.Rank).Max();
+                MinRank = SpringBattlePlayers.Where(x => !x.IsSpectator).Select(x => x.Account.Rank).Min();
             }
 
             if (Duration > GlobalConst.MinDurationForXP)

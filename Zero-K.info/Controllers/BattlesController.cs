@@ -42,30 +42,15 @@ namespace ZeroKWeb.Controllers
             public int[] UserId { get; set; }
             public int? PlayersFrom { get; set; }
             public int? PlayersTo { get; set; }
-            public AgeOption Age { get; set; }
-            public YesNoAny Mission { get; set; }
-            public YesNoAny Bots { get; set; }
-            public YesNoAny Victory { get; set; }
-            public RankSelector Rank { get; set; } = RankSelector.Undefined;
+            public DateTime? AgeFrom { get; set; }
+            public DateTime? AgeTo { get; set; }
+            public RankSelector MinRank { get; set; } = RankSelector.Undefined;
+            public RankSelector MaxRank { get; set; } = RankSelector.Undefined;
+            public bool? Mission { get; set; }
+            public bool? Bots { get; set; }
+            public bool? Victory { get; set; }
             public int? offset { get; set; }
             public List<BattleQuickInfo> Data;
-        }
-
-        public enum YesNoAny
-        {
-            Any = 0,
-            Yes = 1,
-            No = 2
-        }
-
-        public enum AgeOption
-        {
-            Any = 0,
-            Today = 1,
-            [Description("This week")]
-            ThisWeek = 2,
-            [Description("This month")]
-            ThisMonth = 3
         }
 
         /// <summary>
@@ -77,66 +62,34 @@ namespace ZeroKWeb.Controllers
             model = model ?? new BattleSearchModel();
             var q = db.SpringBattles.Include(x => x.SpringBattlePlayers);
 
+            // battle filters
             if (!string.IsNullOrEmpty(model.Title)) q = q.Where(b => b.Title.Contains(model.Title));
-
             if (!string.IsNullOrEmpty(model.Map)) q = q.Where(b => b.ResourceByMapResourceID.InternalName.Contains(model.Map));
-
-
-            //if (user == null && Global.IsAccountAuthorized) user = Global.Account.Name;
-            if (model.UserId != null) {
-                int uniqueIds = model.UserId.Distinct().Count();
-                switch (model.Victory)
-                {
-                    case YesNoAny.Any:
-                        q = q.Where(b => b.SpringBattlePlayers.Where(p => model.UserId.Contains(p.AccountID) && !p.IsSpectator).Count() == uniqueIds);
-                        break;
-                    case YesNoAny.Yes:
-                        q = q.Where(b => b.SpringBattlePlayers.Where(p => model.UserId.Contains(p.AccountID) && !p.IsSpectator && p.IsInVictoryTeam).Count() == uniqueIds);
-                        break;
-                    case YesNoAny.No:
-                        q = q.Where(b => b.SpringBattlePlayers.Where(p => model.UserId.Contains(p.AccountID) && !p.IsSpectator && !p.IsInVictoryTeam).Count() == uniqueIds);
-                        break;
-                }
-            }
-
             if (model.PlayersFrom.HasValue) q = q.Where(b => b.SpringBattlePlayers.Count(p => !p.IsSpectator) >= model.PlayersFrom);
             if (model.PlayersTo.HasValue) q = q.Where(b => b.SpringBattlePlayers.Count(p => !p.IsSpectator) <= model.PlayersTo);
-            
-            if (model.Age != AgeOption.Any)
-            {
-                var limit = DateTime.UtcNow;
-                switch (model.Age)
-                {
-                    case AgeOption.Today:
-                        limit = DateTime.Now.AddDays(-1);
-                        break;
-                    case AgeOption.ThisWeek:
-                        limit = DateTime.UtcNow.AddDays(-7);
-                        break;
-                    case AgeOption.ThisMonth:
-                        limit = DateTime.UtcNow.AddDays(-31);
-                        break;
-                }
-                q = q.Where(b => b.StartTime >= limit);
-            }
+            if (model.AgeFrom.HasValue) q = q.Where(b => b.StartTime >= model.AgeFrom);
+            if (model.AgeTo.HasValue) q = q.Where(b => b.StartTime <= model.AgeTo);
+            if (model.MinRank != RankSelector.Undefined) q = q.Where(b => b.MinRank == (int)model.MinRank);
+            if (model.MaxRank != RankSelector.Undefined) q = q.Where(b => b.MaxRank == (int)model.MaxRank);
+            if (model.Mission.HasValue) q = q.Where(b => b.IsMission == model.Mission);
+            if (model.Bots.HasValue) q = q.Where(b => b.HasBots == model.Bots);
 
-            if (model.Mission != YesNoAny.Any)
-            {
-                var bval = model.Mission == YesNoAny.Yes;
-                q = q.Where(b => b.IsMission == bval);
-            }
-
-            if (model.Bots != YesNoAny.Any)
-            {
-                var bval = model.Bots == YesNoAny.Yes;
-                q = q.Where(b => b.HasBots == bval);
-            }
-
-            if (model.Rank != RankSelector.Undefined)
-            {
-                int rank = (int)model.Rank;
-                q = q.Where(b => b.Rank == rank);
-            }
+            //if (user == null && Global.IsAccountAuthorized) user = Global.Account.Name;
+            //if (model.UserId != null) {
+            //    int uniqueIds = model.UserId.Distinct().Count();
+            //    switch (model.Victory)
+            //    {
+            //        case YesNoAny.Any:
+            //            q = q.Where(b => b.SpringBattlePlayers.Where(p => model.UserId.Contains(p.AccountID) && !p.IsSpectator).Count() == uniqueIds);
+            //            break;
+            //        case YesNoAny.Yes:
+            //            q = q.Where(b => b.SpringBattlePlayers.Where(p => model.UserId.Contains(p.AccountID) && !p.IsSpectator && p.IsInVictoryTeam).Count() == uniqueIds);
+            //            break;
+            //        case YesNoAny.No:
+            //            q = q.Where(b => b.SpringBattlePlayers.Where(p => model.UserId.Contains(p.AccountID) && !p.IsSpectator && !p.IsInVictoryTeam).Count() == uniqueIds);
+            //            break;
+            //    }
+            //}
 
             q = q.OrderByDescending(b => b.StartTime);
 

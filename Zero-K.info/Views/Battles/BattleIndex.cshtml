@@ -5,39 +5,55 @@
 }
 <script>
     $(document).ready(function () {
-        $("#playercount").slider({
-            range: true,
-            min: 0,
-            max: 32,
-            values: [0, 32],
-            slide: function (e, ui) {
-                console.log("slider", e, ui);
-            }
-        });
+        InitToggleSwitch();
     });
 </script>
 <div class="content">
-    <form action="@Url.Action("Index")" id="ajaxScrollForm" method="post">
+    <h1 class="center">Battles</h1>
+    <h2 class="toggle" onclick="ToggleExtra('battle-filters')">Battle Filters</h2>
+    <form id="battle-filters" action="@Url.Action("Index")" id="ajaxScrollForm" method="post">
         <div>
             <input id="Title" name="Title" type="text" placeholder="Room Title" />
             <input id="Map" name="Map" type="text" placeholder="Map" class="ui-autocomplete-input" autocomplete="off" data-autocomplete="/Autocomplete/Maps" data-autocomplete-action="submit" />
-            <input id="PlayersFrom" name="PlayersFrom" type="text" class="hidden" />
-            <input id="PlayersTo" name="PlayersTo" type="text" class="hidden" />
-            <div id="playercount"></div>
+            <input id="PlayersFrom" name="PlayersFrom" type="number" placeholder="Minimum Players" min="0" max="64" />
+            <input id="PlayersTo" name="PlayersTo" type="number" placeholder="Maximum Players" min="0" max="64" />
+            <input id="DateFrom" name="DateFrom" type="datetime" value="Newer Than" />
+            <input id="DateTo" name="DateTo" type="datetime" value="Older Than" />
+
+            <div class="switch3">
+                <input name="Mission" />
+                <div class="slider"></div>
+                <div class="clickable left"><span>Non Mission</span></div>
+                <div class="clickable right"><span>Mission Only</span></div>
+            </div>
+            <div class="switch3">
+                <input name="Bots" />
+                <div class="slider"></div>
+                <div class="clickable left"><span>No Bots</span></div>
+                <div class="clickable right"><span>Bots Present</span></div>
+            </div>
+
+            <label for="MinRank">Minimum Rank</label>
+            @Html.EnumDropDownListFor(x => x.MinRank)
+            
+            <label for="MaxRank">Maximum Rank</label>
+            @Html.EnumDropDownListFor(x => x.MaxRank)
+
 
             @using (var db = new ZkDataContext())
             {
+                <label for="UserId">UserIds</label>
                 @Html.MultiSelectFor(x => x.UserId, Url.Action("UsersNoLink", "Autocomplete"), x => Html.PrintAccount(db.Accounts.Find(x)));
             }
             @*<input id="UserId" name="" type="text" placeholder="Players" class="ui-autocomplete-input" autocomplete="off" data-autocomplete="/Autocomplete/UsersNoLink" data-autocomplete-action="add" />
-                <div id="UserIdplayers"></div>*@
+        <div id="UserIdplayers"></div>*@
             <div class="shovelware">
-                Age: @Html.EnumDropDownListFor(x => x.Age)
-                Mission: @Html.EnumDropDownListFor(x => x.Mission)
-                Bots: @Html.EnumDropDownListFor(x => x.Bots)
-                Rank: @Html.EnumDropDownListFor(x => x.Rank)
-                Victory: @Html.EnumDropDownListFor(x => x.Victory)
-                <input name="sa" value="Search" alt="Search" type="image" src="/img/search_img.png" style="border: none; vertical-align: middle;" />
+                @*Age: @Html.EnumDropDownListFor(x => x.Age)*@
+                @*Mission: @Html.EnumDropDownListFor(x => x.Mission)*@
+                @*Bots: @Html.EnumDropDownListFor(x => x.Bots)*@
+
+                @*Victory: @Html.EnumDropDownListFor(x => x.Victory)*@
+                <input name="sa" value="Search" type="button" />
             </div>
 
             @if (Model.UserId != null) { Html.Raw(string.Concat(Model.UserId.Select(x => Html.Hidden("UserId", x)).ToList())); }

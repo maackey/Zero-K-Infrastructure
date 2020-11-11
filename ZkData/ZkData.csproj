@@ -487,6 +487,10 @@
     <Compile Include="Migrations\202010211325096_AddAutohostApplicableRating.Designer.cs">
       <DependentUpon>202010211325096_AddAutohostApplicableRating.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202011110011245_SpringBattleMinRank.cs" />
+    <Compile Include="Migrations\202011110011245_SpringBattleMinRank.Designer.cs">
+      <DependentUpon>202011110011245_SpringBattleMinRank.cs</DependentUpon>
+    </Compile>
     <Compile Include="SpringFilesUnitsyncAttempt.cs" />
     <Compile Include="SteamWebApi.cs" />
     <Compile Include="UserLanguageNoteAttribute.cs" />
@@ -916,6 +920,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202010211325096_AddAutohostApplicableRating.resx">
       <DependentUpon>202010211325096_AddAutohostApplicableRating.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202011110011245_SpringBattleMinRank.resx">
+      <DependentUpon>202011110011245_SpringBattleMinRank.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ZkDataResources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
