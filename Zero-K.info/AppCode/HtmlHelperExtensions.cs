@@ -237,7 +237,7 @@ namespace System.Web.Mvc
             var map = PrintMap(helper, battle.ResourceByMapResourceID?.InternalName);
             var status = "fa-shield";
             if (isVictory == true) status = "fa-trophy victor";
-            else if (isVictory == false) status = "fa-times-circle defeated";
+            else if (isVictory == false) status = "fa-bomb defeated"; // unlink, umbrella, medkit, thumbs-down, wheelchair, drop, recycle, flag (white), bomb
 
             return new MvcHtmlString($"<span><a href='{url}'><i class='fa {status}'></i> B{battle.SpringBattleID}</a> {battle.Teams} on {map}</span>");
 

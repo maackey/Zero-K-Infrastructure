@@ -12,7 +12,7 @@
     .mission h3, .duration {
         margin-bottom: 0.5em;
     }
-    .players, .place, .duration {
+    .players, .nonplayers, .place, .duration {
         display: inline-block;
     }
     .place:before {
@@ -33,8 +33,19 @@
     var playercount = m.Players.Count(p => !p.IsSpectator);
     var spectatorcount = m.Players.Count(p => p.IsSpectator);
     string botsInvolved = m.Battle.HasBots ? " +<i class='fa fa-microchip'></i> " : "";
-    string playerversus = m.Battle.Teams + botsInvolved;
-    if (spectatorcount > 0) { playerversus += $" (<i class='fa fa-binoculars'></i> {spectatorcount})"; }
+    string nonplayers = "";
+    if (spectatorcount > 0)
+    {
+        nonplayers += $"<i class='fa fa-binoculars'></i> {spectatorcount} ";
+    }
+    if (m.Battle.HasBots)
+    {
+        nonplayers = $"+<i class='fa fa-microchip'></i>";
+    }
+    if (!string.IsNullOrEmpty(nonplayers))
+    {
+        nonplayers = $"({nonplayers})";
+    }
     string hourglass = "fa-hourglass-start";
     if (m.Battle.Duration > 15 * 60) { hourglass = "fa-hourglass-1"; }
     if (m.Battle.Duration > 30 * 60) { hourglass = "fa-hourglass-2"; }
@@ -45,8 +56,9 @@
             <img src='/Resources/@m.Map.ThumbnailName' />
             <h3>@m.Battle.Title</h3>
 
-            <div class="players">@Html.Raw(playerversus)</div>
+            <div class="players">@m.Battle.Teams</div>
             <div class="place">@m.Map.InternalName</div>
+            <div class="nonplayers">@Html.Raw(nonplayers)</div>
             <div class="duration"><i class='fa @hourglass'></i> @TimeSpan.FromSeconds(m.Battle.Duration).ToReadableTime()</div>
 
             <div class="time">@m.Battle.StartTime - @((DateTime.UtcNow - m.Battle.StartTime).ToAgoString())</div>

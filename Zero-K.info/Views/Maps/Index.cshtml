@@ -14,8 +14,8 @@
 <div id="maps" class="content">
     <div class="maplist">
         @* TODO: for handheld devices, replace hover effects with double tap *@
-
-        <h1 class="toggle" onclick="ToggleExtra('ajaxScrollForm')">Map Filters</h1>
+        <h1 class="center">Maps</h1>
+        <h2 class="toggle" onclick="ToggleExtra('ajaxScrollForm', this)"><i class="toggle-indicator fa fa-caret-up"></i> Map Filters</h2>
         <form id="ajaxScrollForm" class="mapfilters" method="post" action="@Url.Action("Index")">
             <div class="filtergroup">
 

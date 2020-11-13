@@ -14,160 +14,205 @@
     var allBots = Model.SpringBattleBots.ToList();
     var allAllyIDs = Model.GetAllyteamIds();
     var allWinChances = Model.GetAllyteamWinChances();
-}
-<div class="content">
-    <a href="@Url.Action("Detail", "Maps", new { id = @Model.MapResourceID })">
-        Map: @Model.ResourceByMapResourceID.InternalName
-    </a>
-    <img src='/Resources/@Model.ResourceByMapResourceID.MinimapName' alt="@Model.ResourceByMapResourceID.InternalName" />
-
-</div>
-<div class="fleft" style="padding: 5px;">
-    <table>
-        <tr>
-            <td>
-                Title:
-            </td>
-            <td>
-                @Model.Title
-        </td>
-    </tr>
-    <tr>
-        <td>
-            Host:
-        </td>
-        <td>
-            @Html.PrintAccount(Model.Account)
-    </td>
-</tr>
-<tr>
-    <td>
-        Game version:
-    </td>
-    <td>
-        @Model.ResourceByModResourceID.InternalName
-</td>
-</tr>
-<tr>
-    <td>
-        Engine version:
-    </td>
-    <td>
-        @Model.EngineVersion
-</td>
-</tr>
-<tr>
-    <td>
-        Started:
-    </td>
-    <td>
-        @Model.StartTime.ToAgoString()
-</td>
-</tr>
-<tr>
-    <td>
-        Duration:
-    </td>
-    <td>
-        @TimeSpan.FromSeconds(Model.Duration).ToReadableTime()
-</td>
-</tr>
-<tr>
-    <td>
-        Players:
-    </td>
-    <td>
-        @Model.PlayerCount
-</td>
-</tr>
-<tr>
-    <td>
-        Bots:
-    </td>
-    <td>
-        @Model.HasBots
-</td>
-</tr>
-<tr>
-    <td>
-        Mission:
-    </td>
-    <td>
-        @Model.IsMission
-</td>
-</tr>
-</table>
-@if (!string.IsNullOrEmpty(Model.ReplayFileName))
-{
-    <a href="@Html.PrintSpringLink(string.Format("@start_replay:{0},{1},{2},{3}", GlobalConst.BaseSiteUrl+ "/replays/" + Path.GetFileName(Model.ReplayFileName), Model.ResourceByModResourceID.InternalName, Model.ResourceByMapResourceID.InternalName, Model.EngineVersion, Model.SpringBattleID))">
-        <span class="textbutton" style="font-size: 130%">Watch Replay Now</span>
-    </a>
-    <br />
-    if (!ZeroKWeb.Global.IsLobbyAccess)
+    string subtitle = "";
+    if (!string.IsNullOrEmpty(Model.Title))
     {
-        <a href='/replays/@Model.ReplayFileName'>Manual download</a>
-        <br />
-    }
-}
-</div>
-<br class="clearfloat" />
-<div>
-    @foreach (var allyID in allAllyIDs)
-    {
-        var win = allPlayers.Any(x => x.IsInVictoryTeam && x.AllyNumber == allyID) || allBots.Any(x => x.IsInVictoryTeam && x.AllyNumber == allyID);
-        var css = ViewBag.ShowWinners ? (win ? "battle_winner" : "battle_loser") : "battle_spec";
-        var label = ViewBag.ShowWinners ? (win ? "Won!" : "Lost") : "";
-        <div class='fleft @css'>
-            <span style="font-size: 130%">Team @(allyID + 1) @label</span><br />
-            @if (Model.IsRatedMatch())
-            {
-                <small>Chance of victory: @(((int)Math.Round(1000 * allWinChances[allyID])) / 10.0)%</small>
-                <br />
-            }
-            @if (ViewBag.ShowWinners)
-            {
-                <small>XP gained: @(win ? @Model.WinnerTeamXpChange : @Model.LoserTeamXpChange)</small>
-            }
-            <br />
-            @foreach (var u in allPlayers.Where(x => x.AllyNumber == allyID))
-            {
-                <span>
-                    @Html.PrintAccount(u.Account)
-                    @if (ViewBag.ShowWinners)
-                    {
-                        @(u.LoseTime.HasValue ? "died in " + TimeSpan.FromSeconds(u.LoseTime.Value).ToReadableTime() : "")
-                        if ((Global.IsModerator) && u.EloChange.HasValue)
-                        {
-                            <span class="admin" style="margin:0px">
-                            Rank: @u.EloChange.Value.ToString("F1")
-                            </span>
-                        }
-                        foreach (var award in Model.AccountBattleAwards.Where(x => x.AccountID == u.AccountID))
-                        {
-                            <img src="/img/Awards/trophy_@(award.AwardKey).png" height="30" title="@award.AwardDescription" />
-                        }
-                    }
-                </span>
-                <br />
-            }
-
-            @foreach (var b in allBots.Where(x => x.AllyNumber == allyID))
-            {
-                <span>
-                    <img src="~/Img/battles/robot.png" />@b.BotName &lt;@b.BotAI&gt;
-                </span>
-                <br />
-            }
-        </div>
-    }
-    <div class="fleft battle_spec">
-        <span style="font-size: 130%">Spectators</span><br />
-        @foreach (var u in Model.SpringBattlePlayers.Where(x => x.IsSpectator))
+        if (Model.Account != null)
         {
-            <small>@Html.PrintAccount(u.Account)</small><br />
+            subtitle = Model.Title + " hosted by " + Html.PrintAccount(Model.Account);
+        }
+        else
+        {
+            subtitle = "AutoHost: " + Model.Title;
+        }
+    }
+}
+<style>
+    .battlefield {
+        position: relative;
+        height: 80vh;
+        text-align: center;
+    }
+    .battlefield > img {
+        /*position: absolute;*/
+        display: block;
+        height: 80vh;
+        max-width: 100%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .teams {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: space-around;
+        z-index: 2;
+    }
+    .team, .spectators {
+        background: rgba(0,0,0,0.8);
+        padding: 1em;
+    }
+    .spectators {
+        display: inline-block;
+        text-align: left;
+    }
+    .infowrapper {
+        margin: 1em auto;
+        text-align: center;
+    }
+    .info {
+        display: inline-block;
+        text-align: left;
+    }
+</style>
+<div class="content">
+    <div class="replay-actions">
+        <a class="replay-action back" href="@Url.Action("Index")">
+            <i class="fa fa-share fa-flip-horizontal"></i><span class="full-text">Back to List</span>
+        </a>
+        @if (!string.IsNullOrEmpty(Model.ReplayFileName))
+        {
+            // TODO: is SpringBattleID included in start replay string?
+            //Html.PrintSpringLink(string.Format("@start_replay:{0},{1},{2},{3}",
+            //GlobalConst.BaseSiteUrl + "/replays/" + Path.GetFileName(Model.ReplayFileName),
+            //Model.ResourceByModResourceID.InternalName,
+            //Model.ResourceByMapResourceID.InternalName,
+            //Model.EngineVersion,
+            //Model.SpringBattleID))
+            MvcHtmlString url = Html.PrintSpringLink($"@start_replay:{GlobalConst.BaseSiteUrl}/replays/{Path.GetFileName(Model.ReplayFileName)},{Model.ResourceByModResourceID.InternalName},{Model.ResourceByMapResourceID.InternalName},{Model.EngineVersion},{Model.SpringBattleID}");
+            <a class="replay-action playnow" href="@url">
+                <i class="fa fa-share"></i><span class="full-text">Watch Now</span>
+            </a>
         }
     </div>
-    <br class="clearfloat" />
+    <h1 class="center">@Model.Teams on @Model.ResourceByMapResourceID.InternalName</h1>
+    <h2 class="center">@Html.Raw(subtitle)</h2>
+    <div class="battlefield">
+        <img src='/Resources/@Model.ResourceByMapResourceID.MinimapName' alt="@Model.ResourceByMapResourceID.InternalName" />
+
+        <div class="teams">
+            @foreach (var allyID in allAllyIDs)
+            {
+                var win = allPlayers.Any(x => x.IsInVictoryTeam && x.AllyNumber == allyID) || allBots.Any(x => x.IsInVictoryTeam && x.AllyNumber == allyID);
+                var xpchange = win ? Model.WinnerTeamXpChange : Model.LoserTeamXpChange;
+                <div id="team@(allyID)" class="team @(win ? "battle_winner" : "battle_loser")">
+                    <h3>Team @(allyID + 1)</h3>
+                    @if (Model.IsRatedMatch())
+                    {
+                        <div class="winchance">Win Chance: @(((int)Math.Round(1000 * allWinChances[allyID])) / 10.0)%</div>
+                    }
+                    @if (xpchange > 0)
+                    {
+                        <div class="xpchange">XP: @(win ? @Model.WinnerTeamXpChange : @Model.LoserTeamXpChange)</div>
+                    }
+                    @foreach (var player in allPlayers.Where(x => x.AllyNumber == allyID))
+                    {
+                        <div class="player">
+                            @Html.PrintAccount(player.Account)
+                            <div class="stats">
+                                @if (Global.IsModerator && player.EloChange.HasValue)
+                                {
+                                    <span>Rank: @player.EloChange.Value.ToString("F1")</span>
+                                }
+                            </div>
+                            <div class="awards">
+                                @foreach (var award in Model.AccountBattleAwards.Where(a => a.AccountID == player.AccountID))
+                                {
+                                    <img src="~/img/Awards/trophy_@(award.AwardKey).png" title="@award.AwardDescription" />
+                                }
+                            </div>
+                            <div class="death">
+                                @if (player.LoseTime.HasValue)
+                                {
+                                    <span>Died in @TimeSpan.FromSeconds(player.LoseTime.Value).ToReadableTime()</span>
+                                }
+                            </div>
+                        </div>
+                    }
+                    @foreach (var b in allBots.Where(x => x.AllyNumber == allyID))
+                    {
+                        <div class="bot">
+                            <i class="fa fa-microchip"></i> @b.BotName [@(b.BotAI)]
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+    <div class="infowrapper">
+        @if (Model.SpectatorCount > 0)
+        {
+            <div class="spectators">
+                <h3>Spectators</h3>
+                @foreach (var spec in Model.SpringBattlePlayers.Where(x => x.IsSpectator))
+                {
+                    <div class="spectator">@Html.PrintAccount(spec.Account)</div>
+                }
+            </div>
+        }
+    </div>
+    <div class="infowrapper">
+        <div class="info">
+            <div>
+                <div class="infokey">Map: </div>
+                <div class="infovalue">
+                    <a href="@Url.Action("Detail", "Maps", new { id = Model.MapResourceID })">
+                        @Model.ResourceByMapResourceID.InternalName
+                    </a>
+                </div>
+            </div>
+            <div>
+                <div class="infokey">Host: </div>
+                <div class="infovalue">@(Model.Account != null ? Html.PrintAccount(Model.Account) : new MvcHtmlString("Auto Host"))</div>
+            </div>
+            <div>
+                <div class="infokey">Title: </div>
+                <div class="infovalue">@(Model.Title ?? "Not Available")</div>
+            </div>
+            <div>
+                <div class="infokey">Duration: </div>
+                <div class="infovalue">@TimeSpan.FromSeconds(Model.Duration).ToReadableTime()</div>
+            </div>
+            <div>
+                <div class="infokey">Start Date: </div>
+                <div class="infovalue">@Model.StartTime.ToAgoString()</div>
+            </div>
+            <div>
+                <div class="infokey">Game Version: </div>
+                <div class="infovalue">@Model.ResourceByModResourceID.InternalName</div>
+            </div>
+            <div>
+                <div class="infokey">Engine Version: </div>
+                <div class="infovalue">@(Model.EngineVersion ?? "Not Available")</div>
+            </div>
+            <div>
+                <div class="infokey">Player Count:</div>
+                <div class="infovalue">@Model.PlayerCount</div>
+            </div>
+            <div>
+                <div class="infokey">Spectator Count:</div>
+                <div class="infovalue">@Model.SpectatorCount</div>
+            </div>
+            <div>
+                <div class="infokey">Bots: </div>
+                <div class="infovalue">@Model.HasBots</div>
+            </div>
+            <div>
+                <div class="infokey">Mission: </div>
+                <div class="infovalue">@Model.IsMission</div>
+            </div>
+        </div>
+    </div>
+    <div class="misc">
+        @if (!string.IsNullOrEmpty(Model.ReplayFileName) && !ZeroKWeb.Global.IsLobbyAccess)
+        {
+            <a href='/replays/@Model.ReplayFileName'>Manual download</a>
+        }
+    </div>
 </div>
 @if (!ViewBag.ShowWinners)
 {

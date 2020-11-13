@@ -88,6 +88,13 @@ namespace ZkData
                 return string.Join(" v ", SpringBattlePlayers.Where(p => !p.IsSpectator).GroupBy(p => p.AllyNumber).Select(g => g.Count()));
             }
         }
+        public int SpectatorCount
+        {
+            get
+            {
+                return SpringBattlePlayers.Count(p => p.IsSpectator);
+            }
+        }
 
         public bool IsRatedMatch()
         {
