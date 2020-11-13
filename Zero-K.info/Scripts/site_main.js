@@ -154,14 +154,29 @@ function CopyToClipboard(elem) {
     return succeed;
 }
 
-function ToggleExtra(id) {
-    var element = $("#" + id);
-    if (!element) return;
+function ToggleExtra(id, e) {
+    // get element that is to be toggled
+    var target = $("#" + id);
+    if (!target) return;
 
-    if (element.is(":visible")) {
-        element.slideUp();
+    // update toggle indicator if present
+    if (e) {
+        var indicator = $(e).children(".toggle-indicator");
+        var upclass = "fa-caret-up"; //"fa-chevron-circle-up";
+        var downclass = "fa-caret-down"; //"fa-chevron-circle-down";
+
+        if (indicator.hasClass(upclass)) {
+            indicator.removeClass(upclass).addClass(downclass);
+        } else if (indicator.hasClass(downclass)) {
+            indicator.removeClass(downclass).addClass(upclass);
+        }
+    }
+
+    // toggle target visibility
+    if (target.is(":visible")) {
+        target.slideUp();
     } else {
-        element.slideDown();
+        target.slideDown();
     }
 }
 
@@ -247,13 +262,19 @@ function InitToggleSwitch() {
         var slider = parent.children(".slider");
 
         if ($(this).hasClass("left")) {
+            // clicked on the left side
+            parent.toggleClass("active");
             slider.toggleClass("left");
             input.val("false");
         } else if ($(this).hasClass("right")) {
+            // clicked on the right side
+            parent.toggleClass("active");
             slider.toggleClass("right");
             input.val("true");
         }
         if (slider.hasClass("left") && slider.hasClass("right")) {
+            // one side was active, and other side was clicked
+            parent.removeClass("active");
             slider.removeClass("left");
             slider.removeClass("right");
             input.val("");

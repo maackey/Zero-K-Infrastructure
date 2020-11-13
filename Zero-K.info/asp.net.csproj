@@ -249,14 +249,12 @@
     <Compile Include="Models\PartialViewEngine.cs" />
     <Compile Include="ResourceList.aspx.cs">
       <DependentUpon>ResourceList.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="ResourceList.aspx.designer.cs">
       <DependentUpon>ResourceList.aspx</DependentUpon>
     </Compile>
     <Compile Include="ErrorReports.aspx.cs">
       <DependentUpon>ErrorReports.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="ErrorReports.aspx.designer.cs">
       <DependentUpon>ErrorReports.aspx</DependentUpon>
@@ -274,7 +272,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ResourceDetail.aspx.cs">
       <DependentUpon>ResourceDetail.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="ResourceDetail.aspx.designer.cs">
       <DependentUpon>ResourceDetail.aspx</DependentUpon>
@@ -306,7 +303,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Img\cup.png" />
-    <Content Include="Img\Loader.gif" />
     <Content Include="MissionService.svc" />
     <Content Include="ResourceDetail.aspx" />
     <Content Include="Scripts\browser-css.js" />
@@ -376,15 +372,6 @@
     <None Include="AppCode\ModStatsDb.dbml.views">
       <DependentUpon>ModStatsDb.dbml</DependentUpon>
     </None>
-    <Content Include="Img\fanart\zk_logo_alt.xcf" />
-    <Content Include="Img\structures\defgrid.xcf" />
-    <Content Include="Img\structures\superweapon.xcf" />
-    <Content Include="Img\structures\wormhole.xcf" />
-    <Content Include="Img\download.xcf" />
-    <Content Include="Img\eclipselogo.xcf" />
-    <Content Include="Img\eclipselogosmall.xcf" />
-    <Content Include="Img\eclipselogowide.xcf" />
-    <Content Include="Img\zk_logo.png_org" />
     <Content Include="packages.config">
       <SubType>Designer</SubType>
     </Content>
@@ -521,6 +508,7 @@
     <Content Include="Views\Lobby\LobbyChatMessages.cshtml" />
     <Content Include="Views\Shared\_rating.cshtml" />
     <Content Include="Styles\less\administration.less" />
+    <Content Include="Styles\less\sliderrange.less" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\_ViewStart.cshtml" />

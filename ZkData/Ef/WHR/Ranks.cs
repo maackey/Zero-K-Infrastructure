@@ -10,23 +10,23 @@ namespace Ratings
 {
     public enum RankSelector
     {
-        [Display(Name="Nebulous")]
+        [Display(Name="Nebulous (gray)")]
         Grey = 0,
-        [Display(Name="Brown Dwarf")]
+        [Display(Name="Brown Dwarf (brown)")]
         Brown = 1,
-        [Display(Name="Red Dwarf")]
+        [Display(Name="Red Dwarf (red)")]
         Red = 2,
-        [Display(Name="Subgiant")]
+        [Display(Name="Subgiant (orange)")]
         Orange = 3,
-        [Display(Name="Giant")]
+        [Display(Name="Giant (yellow)")]
         Yellow = 4,
-        [Display(Name="Supergiant")]
+        [Display(Name="Supergiant (light-blue)")]
         White = 5,
-        [Display(Name="Neutron Star")]
+        [Display(Name="Neutron Star (blue)")]
         Blue = 6,
-        [Display(Name="Singularity")]
+        [Display(Name="Singularity (purple)")]
         Purple = 7,
-        [Display(Name="Any")]
+        [Display(Name="Any Rank")]
         Undefined = 8,
     }
 

@@ -12,6 +12,9 @@ namespace ZeroKWeb.Controllers
 {
     public class BattlesController: Controller
     {
+        const int MAX_PLAYER_COUNT = 32;
+        const int MAX_DURATION_MINUTES = 60;
+
         //
         // GET: /Battles/
 
@@ -46,6 +49,8 @@ namespace ZeroKWeb.Controllers
             public DateTime? AgeTo { get; set; }
             public RankSelector MinRank { get; set; } = RankSelector.Undefined;
             public RankSelector MaxRank { get; set; } = RankSelector.Undefined;
+            public int? MinDuration { get; set; }
+            public int? MaxDuration { get; set; }
             public bool? Mission { get; set; }
             public bool? Bots { get; set; }
             public bool? Victory { get; set; }
@@ -65,12 +70,19 @@ namespace ZeroKWeb.Controllers
             // battle filters
             if (!string.IsNullOrEmpty(model.Title)) q = q.Where(b => b.Title.Contains(model.Title));
             if (!string.IsNullOrEmpty(model.Map)) q = q.Where(b => b.ResourceByMapResourceID.InternalName.Contains(model.Map));
+
+            if (model.MinDuration.HasValue) q = q.Where(b => b.Duration >= 60 * model.MinDuration);
+            if (model.MaxDuration.HasValue && model.MaxDuration != MAX_DURATION_MINUTES) q = q.Where(b => b.Duration <= 60 * model.MaxDuration);
             if (model.PlayersFrom.HasValue) q = q.Where(b => b.SpringBattlePlayers.Count(p => !p.IsSpectator) >= model.PlayersFrom);
-            if (model.PlayersTo.HasValue) q = q.Where(b => b.SpringBattlePlayers.Count(p => !p.IsSpectator) <= model.PlayersTo);
+            if (model.PlayersTo.HasValue && model.PlayersTo != MAX_PLAYER_COUNT) q = q.Where(b => b.SpringBattlePlayers.Count(p => !p.IsSpectator) <= model.PlayersTo);
             if (model.AgeFrom.HasValue) q = q.Where(b => b.StartTime >= model.AgeFrom);
             if (model.AgeTo.HasValue) q = q.Where(b => b.StartTime <= model.AgeTo);
-            if (model.MinRank != RankSelector.Undefined) q = q.Where(b => b.MinRank == (int)model.MinRank);
-            if (model.MaxRank != RankSelector.Undefined) q = q.Where(b => b.MaxRank == (int)model.MaxRank);
+            
+            if (model.MinRank != RankSelector.Undefined && model.MinRank > RankSelector.Grey) 
+                q = q.Where(b => b.MinRank >= (int)model.MinRank);
+            if (model.MaxRank != RankSelector.Undefined && model.MaxRank < RankSelector.Purple) 
+                q = q.Where(b => b.MaxRank <= (int)model.MaxRank);
+            
             if (model.Mission.HasValue) q = q.Where(b => b.IsMission == model.Mission);
             if (model.Bots.HasValue) q = q.Where(b => b.HasBots == model.Bots);
 

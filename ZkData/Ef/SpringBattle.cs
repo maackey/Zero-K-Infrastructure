@@ -11,21 +11,17 @@ namespace ZkData
 {
     public class SpringBattle
     {
+        public SpringBattle()
+        {
+            AccountBattleAwards = new HashSet<AccountBattleAward>();
+            SpringBattlePlayers = new HashSet<SpringBattlePlayer>();
+            Events = new HashSet<Event>();
+        }
+
         public virtual Account Account { get; set; }
         public virtual ICollection<AccountBattleAward> AccountBattleAwards { get; set; }
 
 
-        public string BattleType
-        {
-            get
-            {
-                var type = "Multiplayer";
-                if (PlayerCount <= 1) type = "Singleplayer";
-                if (HasBots) type = "Bots";
-                if (IsMission) type = "Mission";
-                return type;
-            }
-        }
         public int Duration { get; set; } //Time from start to end of battle in seconds
         [StringLength(64)]
         [Index]
@@ -35,11 +31,6 @@ namespace ZkData
         public virtual ICollection<Event> Events { get; set; }
         public virtual ForumThread ForumThread { get; set; }
         public int? ForumThreadID { get; set; }
-        public string FullTitle
-        {
-            get { return string.Format("B{0} {1} on {2} ({3})", SpringBattleID, PlayerCount, ResourceByMapResourceID.InternalName, BattleType); }
-        }
-
 
         [StringLength(250)]
         public string GlacierArchiveID { get; set; }
@@ -74,11 +65,28 @@ namespace ZkData
         public int? MaxRank { get; set; }
         public int? MinRank { get; set; }
 
-        public SpringBattle()
+
+        public string FullTitle
         {
-            AccountBattleAwards = new HashSet<AccountBattleAward>();
-            SpringBattlePlayers = new HashSet<SpringBattlePlayer>();
-            Events = new HashSet<Event>();
+            get { return string.Format("B{0} {1} on {2} ({3})", SpringBattleID, PlayerCount, ResourceByMapResourceID.InternalName, BattleType); }
+        }
+        public string BattleType
+        {
+            get
+            {
+                var type = "Multiplayer";
+                if (PlayerCount <= 1) type = "Singleplayer";
+                if (HasBots) type = "Bots";
+                if (IsMission) type = "Mission";
+                return type;
+            }
+        }
+        public string Teams
+        {
+            get
+            {
+                return string.Join(" v ", SpringBattlePlayers.Where(p => !p.IsSpectator).GroupBy(p => p.AllyNumber).Select(g => g.Count()));
+            }
         }
 
         public bool IsRatedMatch()

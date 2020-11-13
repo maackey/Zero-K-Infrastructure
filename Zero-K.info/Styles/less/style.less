@@ -6,6 +6,7 @@
 @import "maps.less";
 @import "navigation.less";
 @import "modules/all_modules.less";
+@import "sliderrange.less";
 @import "toggleswitch.less";
 @import "ternaryswitch.less";
 @import "administration.less";
@@ -239,8 +240,13 @@ input[type=button]:hover, input[type=submit]:hover, button:hover {
     }
 }
 
+.toggle {
+    padding: 0.5em 1em;
+    transition: 0.5s;
+}
 .toggle:hover {
-    background: fadein(@background-pop, 20%);
+    /*background: fadein(@background-pop, 5%);*/
+    text-shadow: 0 0 5px @highlight;
     cursor: pointer;
 }
 
@@ -310,4 +316,11 @@ input[type=button]:hover, input[type=submit]:hover, button:hover {
 
 .faction {
 
+}
+
+.victor {
+    color: gold;
+}
+.defeated {
+    color: firebrick;
 }

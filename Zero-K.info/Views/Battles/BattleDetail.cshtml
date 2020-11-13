@@ -10,13 +10,17 @@
     {
         aspectratio /= 2;
     }
+    var allPlayers = Model.SpringBattlePlayers.Where(x => !x.IsSpectator).OrderByDescending(x => x.Account.GetIconLevel()).OrderByDescending(x => x.Account.Rank).ToList();
+    var allBots = Model.SpringBattleBots.ToList();
+    var allAllyIDs = Model.GetAllyteamIds();
+    var allWinChances = Model.GetAllyteamWinChances();
 }
-<div class="fleft" style="width: 300px; height: 320px; position: relative; text-align: center;">
-    <a href="@Url.Action("Detail", "Maps", new { id = @Model.MapResourceID })" title="$map$@Model.ResourceByMapResourceID.InternalName" style="height: 20px; width: 100%; font-weight: bold; ">
-        Map: @Model.ResourceByMapResourceID.InternalName<br />
+<div class="content">
+    <a href="@Url.Action("Detail", "Maps", new { id = @Model.MapResourceID })">
+        Map: @Model.ResourceByMapResourceID.InternalName
     </a>
-    <img src='/Resources/@Model.ResourceByMapResourceID.MinimapName' alt="@Model.ResourceByMapResourceID.InternalName" width="100%"
-         height="@(100 / aspectratio)%" style="max-height: 300px;" />
+    <img src='/Resources/@Model.ResourceByMapResourceID.MinimapName' alt="@Model.ResourceByMapResourceID.InternalName" />
+
 </div>
 <div class="fleft" style="padding: 5px;">
     <table>
@@ -108,12 +112,6 @@
 </div>
 <br class="clearfloat" />
 <div>
-    @{
-        var allPlayers = Model.SpringBattlePlayers.Where(x => !x.IsSpectator).OrderByDescending(x => x.Account.GetIconLevel()).OrderByDescending(x => x.Account.Rank).ToList();
-        var allBots = Model.SpringBattleBots.ToList();
-        var allAllyIDs = Model.GetAllyteamIds();
-        var allWinChances = Model.GetAllyteamWinChances();
-    }
     @foreach (var allyID in allAllyIDs)
     {
         var win = allPlayers.Any(x => x.IsInVictoryTeam && x.AllyNumber == allyID) || allBots.Any(x => x.IsInVictoryTeam && x.AllyNumber == allyID);

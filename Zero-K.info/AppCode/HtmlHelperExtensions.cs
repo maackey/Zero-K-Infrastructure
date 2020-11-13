@@ -149,13 +149,13 @@ namespace System.Web.Mvc
             else if (threadLastRead?.LastPosted != null)
             {
                 // forum has been posted to before
-                faIcon = "fa-envelope-o";
+                faIcon = "fa-envelope";
                 forumIMG = "/img/mail/mail-new.png";
                 forumReadStatus = "mail-new";
             }
             else
             {
-                faIcon = "fa-envelope";
+                faIcon = "fa-envelope-o";
                 forumIMG = "/img/mail/mail-unread.png";
                 forumReadStatus = "mail-unread";
             }
@@ -220,7 +220,7 @@ namespace System.Web.Mvc
             
             // moderator icon
             string moderatorIcon = "";
-            if (account.AdminLevel >= AdminLevel.Moderator) moderatorIcon = "<i class='username fa fa-heartbeat'></i>"; // "<img src='/img/police.png'  class='moderator icon16' alt='Admin' />";
+            if (account.AdminLevel >= AdminLevel.Moderator) moderatorIcon = "<i class='username fa fa-fire-extinguisher'></i>"; // "<img src='/img/police.png'  class='moderator icon16' alt='Admin' />";
 
             // user name
             // nicetitle='$user${account.AccountID}'
@@ -232,27 +232,36 @@ namespace System.Web.Mvc
         }
 
         public static MvcHtmlString PrintBattle(this HtmlHelper helper, SpringBattle battle, bool? isVictory = null) {
-            var url = Global.UrlHelper();
-            var icon = "";
-            if (isVictory == true) icon = "battlewon.png";
-            else if (isVictory == null) icon = "spec.png";
-            else icon = "battlelost.png";
 
-            icon = string.Format("<img src='/img/battles/{0}' class='vcenter' />", icon);
+            var url = Global.UrlHelper().Action("Detail", "Battles", new { id = battle.SpringBattleID });
+            var map = PrintMap(helper, battle.ResourceByMapResourceID?.InternalName);
+            var status = "fa-shield";
+            if (isVictory == true) status = "fa-trophy victor";
+            else if (isVictory == false) status = "fa-times-circle defeated";
 
-            if (battle.IsMission) icon += " <img src='/img/battles/mission.png' alt='Mission' class='vcenter' />";
-            if (battle.HasBots) icon += " <img src='/img/battles/robot.png' alt='Bots' class='vcenter' />";
+            return new MvcHtmlString($"<span><a href='{url}'><i class='fa {status}'></i> B{battle.SpringBattleID}</a> {battle.Teams} on {map}</span>");
 
-            if (battle.BattleType == "Multiplayer") icon += " <img src='/img/battles/multiplayer.png' alt='Multiplayer' class='vcenter' />";
-            else if (battle.BattleType == "Singleplayer") icon += " <img src='/img/battles/singleplayer.png' alt='Singleplayer' class='vcenter' />";
+            //var url = Global.UrlHelper();
+            //var icon = "";
+            //if (isVictory == true) icon = "battlewon.png";
+            //else if (isVictory == null) icon = "spec.png";
+            //else icon = "battlelost.png";
 
-            return
-                new MvcHtmlString(string.Format("<span><a href='{0}'>{4} B{1}</a> {2} on {3}</span>",
-                                                url.Action("Detail", "Battles", new { id = battle.SpringBattleID }),
-                                                battle.SpringBattleID,
-                                                battle.PlayerCount,
-                                                PrintMap(helper, battle.ResourceByMapResourceID?.InternalName),
-                                                icon));
+            //icon = string.Format("<img src='/img/battles/{0}' class='vcenter' />", icon);
+
+            //if (battle.IsMission) icon += " <img src='/img/battles/mission.png' alt='Mission' class='vcenter' />";
+            //if (battle.HasBots) icon += " <img src='/img/battles/robot.png' alt='Bots' class='vcenter' />";
+
+            //if (battle.BattleType == "Multiplayer") icon += " <img src='/img/battles/multiplayer.png' alt='Multiplayer' class='vcenter' />";
+            //else if (battle.BattleType == "Singleplayer") icon += " <img src='/img/battles/singleplayer.png' alt='Singleplayer' class='vcenter' />";
+
+            //return
+            //    new MvcHtmlString(string.Format("<span><a href='{0}'>{4} B{1}</a> {2} on {3}</span>",
+            //                                    url.Action("Detail", "Battles", new { id = battle.SpringBattleID }),
+            //                                    battle.SpringBattleID,
+            //                                    battle.PlayerCount,
+            //                                    PrintMap(helper, battle.ResourceByMapResourceID?.InternalName),
+            //                                    icon));
         }
 
         /// <summary>

@@ -1,0 +1,59 @@
+﻿
+@import "colors.less";
+
+.slider-range {
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+    background: fadeout(darken(@highlight, 45%), 10%);
+    width: 100%;
+    height: 3em;
+    padding: 1em;
+    cursor: pointer;
+    user-select: none;
+
+    .included-range {
+        position: absolute;
+        background: fadeout(@highlight, 20%);
+        top: 1.1em;
+        left: 0.5em;
+        right: 0.5em;
+        bottom: 1.1em;
+        margin-left: 0.5em;
+        margin-right: 0.5em;
+        border-radius: 0.5em;
+        box-shadow: 0 0 5px @highlight;
+        transition: 1s;
+    }
+
+    .handle {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: absolute;
+        background: @background;
+        height: 2em;
+        width: 2em;
+        top: 1em;
+        border: 1px solid @highlight;
+        box-shadow: 0 0 6px @highlight;
+        border-radius: 1.5em;
+        font-family: "Xolonium", sans-serif;
+        font-weight: bold;
+        font-size: 75%;
+    }
+
+    .min-value {
+        left: 0.5em;
+    }
+
+    .max-value {
+        right: 0.5em;
+    }
+
+    .tickmark {
+        background: darken(@highlight, 40%);
+        width: 2px;
+        height: 100%;
+    }
+}

@@ -43,18 +43,7 @@
             {
                 <tr class="forum_row toggle@(tog)">
                     <td>
-                        @if (t.IsLocked && t.IsPinned)
-                        {
-                            <img src="../../img/stickylock.png" width="25" />
-                        }
-                        else if (t.IsLocked)
-                        {
-                            <img src="../../img/lock.png" width="25" />
-                        }
-                        else if (t.IsPinned)
-                        {
-                            <img src="../../img/sticky.png" width="25" />
-                        }
+
                     </td>
                     <td>@Html.Print(t)</td>
                     <td>@Html.PrintAccount(t.AccountByCreatedAccountID)</td>

@@ -12,6 +12,8 @@
 @if (Model.CanEdit(Global.Account))
 {
     <br/>
-    <a href="@Url.Action("NewPost", "Forum", new { threadID = Model.ForumThreadID, forumPostID = Model.ForumPostID })" class="textbutton">Edit <img src="~/Img/edit_pencil.png" class="icon16"/></a>
+    <a href="@Url.Action("NewPost", "Forum", new { threadID = Model.ForumThreadID, forumPostID = Model.ForumPostID })" class="textbutton">
+        <i class="fa fa-edit"></i> Edit
+    </a>
     <span>&nbsp;<b>[@Model.ForumThread.WikiKey]</b></span>
 }

@@ -6,19 +6,143 @@
 <script>
     $(document).ready(function () {
         InitToggleSwitch();
+        InitSliderRange();
     });
+    
+    function InitSliderRange() {
+        function display(func, val) {
+            switch (func) {
+                case "minRank": return "<img src='Img/ranks/0_" + val + ".png' />"; break;
+                case "maxRank": return "<img src='Img/ranks/7_" + val + ".png' />"; break;
+                default: return val;
+            }
+        }
+
+        $(".slider-range").each(function (i, slider) {
+            // link relevant input fields
+            var minField = $("#" + $(slider).data("min"));
+            var maxField = $("#" + $(slider).data("max"));
+            var minValue = minField.attr("min");
+            var maxValue = maxField.attr("max");
+
+            console.log("minvalue: ", minValue, "maxvalue: ", maxValue);
+
+            // generate tick marks
+            var tickmarks = "";
+            for (var i = minValue; i <= maxValue; i++) {
+                tickmarks += "<div id='tickmark" + i + "' data-value='" + i + "' class='tickmark'></div>";
+            }
+            $(slider).prepend(tickmarks);
+
+            // place handles on min/max ticks
+            var min_handle = $(slider).children(".min-value");
+            var max_handle = $(slider).children(".max-value");
+            min_handle.css("left", $(slider).children("#tickmark" + minValue).position().left - min_handle.width() / 2)
+                .html(display(min_handle.data("display"), minValue));
+            max_handle.css("left", $(slider).children("#tickmark" + maxValue).position().left - max_handle.width() / 2)
+                .html(display(max_handle.data("display"), maxValue));
+
+            // bind events
+            $(slider).mousedown(function (e) {
+                var mouse_event = e.originalEvent;
+
+                // find closest handle
+                var min_handle_distance = Math.abs(mouse_event.x - min_handle.position().left);
+                var max_handle_distance = Math.abs(mouse_event.x - max_handle.position().left);
+                var closest_handle = min_handle_distance <= max_handle_distance ? min_handle : max_handle;
+
+                // grab closest handle
+                $(slider).data("handle", closest_handle);
+            }).mousemove(function (e) {
+                // don't do anything if we're not dragging anything
+                var active_handle = $(slider).data("handle");
+                if (!active_handle) return;
+
+                var mouse_event = e.originalEvent;
+
+                // find closest tickmark
+                var closest_tick = null;
+                var previous_distance = Infinity;
+                $(slider).children(".tickmark").each(function (i, tickmark) {
+                    var distance = Math.abs(mouse_event.x - $(slider).position().left - $(tickmark).position().left);
+                    if (distance < previous_distance) {
+                        previous_distance = distance;
+                        closest_tick = $(tickmark);
+                    }
+                });
+
+                // snap handle to tick location
+                var offset = closest_tick.position().left - active_handle.width() / 2;
+                var content = display(active_handle.data("display"), closest_tick.data("value"));
+                active_handle.data("value", closest_tick.data("value")).css("left", offset).html(content);
+
+                // resize included range bar
+                $(slider).children(".included-range")
+                    .css("left", min_handle.position().left)
+                    .css("right", $(slider).width() - max_handle.position().left - max_handle.width());
+
+            }).mouseup(function () {
+                // set hidden input values
+                $(minField).val(min_handle.data("value")).change();
+                $(maxField).val(max_handle.data("value")).change();
+
+                // drop handle
+                $(slider).data("handle", null);
+            });
+        });
+    }
 </script>
 <div class="content">
     <h1 class="center">Battles</h1>
-    <h2 class="toggle" onclick="ToggleExtra('battle-filters')">Battle Filters</h2>
-    <form id="battle-filters" action="@Url.Action("Index")" id="ajaxScrollForm" method="post">
+    <h2 class="toggle" onclick="ToggleExtra('ajaxScrollForm', this)"><i class="toggle-indicator fa fa-caret-up"></i> Battle Filters</h2>
+    <form id="ajaxScrollForm" class="" action="@Url.Action("Index")" method="post">
         <div>
+            <div class="hidden">
+                <input id="DateFrom" name="DateFrom" type="datetime" placeholder="Newer Than" />
+                <input id="DateTo" name="DateTo" type="datetime" placeholder="Older Than" />
+            </div>
             <input id="Title" name="Title" type="text" placeholder="Room Title" />
             <input id="Map" name="Map" type="text" placeholder="Map" class="ui-autocomplete-input" autocomplete="off" data-autocomplete="/Autocomplete/Maps" data-autocomplete-action="submit" />
-            <input id="PlayersFrom" name="PlayersFrom" type="number" placeholder="Minimum Players" min="0" max="64" />
-            <input id="PlayersTo" name="PlayersTo" type="number" placeholder="Maximum Players" min="0" max="64" />
-            <input id="DateFrom" name="DateFrom" type="datetime" value="Newer Than" />
-            <input id="DateTo" name="DateTo" type="datetime" value="Older Than" />
+
+            <label>Supported Maps</label>
+            <div class="slider-range" data-min="MinMapSupport" data-max="MaxMapSupport">
+                <div class="included-range"></div>
+                <div class="handle min-value" data-value="0"></div>
+                <div class="handle max-value" data-value="3"></div>
+            </div>
+
+            <label>Game Duration</label>
+            <div class="slider-range" data-min="MinDuration" data-max="MaxDuration">
+                <div class="included-range"></div>
+                <div class="handle min-value" data-value="0"></div>
+                <div class="handle max-value" data-value="60"></div>
+            </div>
+            <input id="MinDuration" name="MinDuration" class="hidden" type="text" min="0" />
+            <input id="MaxDuration" name="MaxDuration" class="hidden" type="text" max="60" />
+
+            <label>Player Count</label>
+            <div class="slider-range" data-min="PlayersFrom" data-max="PlayersTo">
+                <div class="included-range"></div>
+                <div class="handle min-value" data-value="0"></div>
+                <div class="handle max-value" data-value="32"></div>
+            </div>
+            <input id="PlayersFrom" name="PlayersFrom" class="hidden" type="text" min="0" />
+            <input id="PlayersTo" name="PlayersTo" class="hidden" type="text" max="32" />
+
+            <label>Player Ranks</label>
+            <div class="slider-range" data-min="MinRank" data-max="MaxRank">
+                <div class="included-range"></div>
+                <div class="handle min-value" data-value="0" data-display="minRank"></div>
+                <div class="handle max-value" data-value="7" data-display="maxRank"></div>
+            </div>
+            <input id="MinRank" name="MinRank" class="hidden" type="text" min="0" />
+            <input id="MaxRank" name="MaxRank" class="hidden" type="text" max="7" />
+
+            @*<label for="MinRank">At least Rank</label>
+        @Html.EnumDropDownListFor(x => x.MinRank)
+
+        <label for="MaxRank">At most Rank</label>
+        @Html.EnumDropDownListFor(x => x.MaxRank)*@
 
             <div class="switch3">
                 <input name="Mission" />
@@ -33,28 +157,17 @@
                 <div class="clickable right"><span>Bots Present</span></div>
             </div>
 
-            <label for="MinRank">Minimum Rank</label>
-            @Html.EnumDropDownListFor(x => x.MinRank)
-            
-            <label for="MaxRank">Maximum Rank</label>
-            @Html.EnumDropDownListFor(x => x.MaxRank)
-
-
             @using (var db = new ZkDataContext())
             {
                 <label for="UserId">UserIds</label>
                 @Html.MultiSelectFor(x => x.UserId, Url.Action("UsersNoLink", "Autocomplete"), x => Html.PrintAccount(db.Accounts.Find(x)));
             }
+            <input name="sa" value="Search" type="submit" />
+
             @*<input id="UserId" name="" type="text" placeholder="Players" class="ui-autocomplete-input" autocomplete="off" data-autocomplete="/Autocomplete/UsersNoLink" data-autocomplete-action="add" />
         <div id="UserIdplayers"></div>*@
-            <div class="shovelware">
-                @*Age: @Html.EnumDropDownListFor(x => x.Age)*@
-                @*Mission: @Html.EnumDropDownListFor(x => x.Mission)*@
-                @*Bots: @Html.EnumDropDownListFor(x => x.Bots)*@
 
-                @*Victory: @Html.EnumDropDownListFor(x => x.Victory)*@
-                <input name="sa" value="Search" type="button" />
-            </div>
+            @*Victory: @Html.EnumDropDownListFor(x => x.Victory)*@
 
             @if (Model.UserId != null) { Html.Raw(string.Concat(Model.UserId.Select(x => Html.Hidden("UserId", x)).ToList())); }
         </div>

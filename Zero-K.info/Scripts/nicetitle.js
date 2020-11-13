@@ -86,7 +86,7 @@ niceTitlesJS.installNiceTitleListener = function () {
             if (!niceTitlesJS.ajaxCache.hasOwnProperty(nicetitle)) {
                 qtipOptions['content'] =
                 {
-                    text: "loading...<img src='/img/Loader.gif' style='vertical-align: middle;' width='20'>",
+                    text: "<i class='fa fa-spinner fa-spin'></i> loading...",
                     ajax:
                     {
                         url: '/Home/GetTooltip',
