@@ -72,12 +72,12 @@ namespace ZkData
 
         public string GetImageUrl()
         {
-            return string.Format("/img/clans/{0}.png", Shortcut);
+            return string.Format("/img/planetwars/clans/{0}.png", Shortcut);
         }
 
         public string GetBGImageUrl()
         {
-            return string.Format("/img/clans/{0}_bg.png", Shortcut);
+            return string.Format("/img/planetwars/clans/{0}_bg.png", Shortcut);
         }
 
 

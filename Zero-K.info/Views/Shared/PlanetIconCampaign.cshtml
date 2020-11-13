@@ -4,7 +4,7 @@
     var db = new ZkDataContext();
     string mapName = Model.DisplayedMap ?? Model.Mission.Map;
     Resource map = db.Resources.FirstOrDefault(m => m.InternalName == mapName);
-    var planetIconUrl = "/img/planets/" + map.MapPlanetWarsIcon;
+    var planetIconUrl = "/img/planetwars/planets/" + map.MapPlanetWarsIcon;
     var size = map.PlanetWarsIconSize * CampaignPlanet.OverlayRatio;
     var offset = (map.PlanetWarsIconSize * CampaignPlanet.OverlayRatio - Model.Mission.Resources.First().PlanetWarsIconSize) / 2;
 }

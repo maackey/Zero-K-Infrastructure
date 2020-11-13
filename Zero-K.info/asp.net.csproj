@@ -302,7 +302,6 @@
     <Content Include="Global.asax">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Img\cup.png" />
     <Content Include="MissionService.svc" />
     <Content Include="ResourceDetail.aspx" />
     <Content Include="Scripts\browser-css.js" />
@@ -378,7 +377,6 @@
     <Content Include="GeoLite2-Country.mmdb">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Img\factions\ships.xcf" />
     <None Include="Properties\PublishProfiles\Profile1.pubxml" />
     <Content Include="Scripts\jquery-3.3.1.slim.min.map" />
     <Content Include="Scripts\jquery-3.3.1.min.map" />

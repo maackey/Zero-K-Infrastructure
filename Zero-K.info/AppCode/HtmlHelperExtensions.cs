@@ -362,7 +362,7 @@ namespace System.Web.Mvc
             if (planet == null) return new MvcHtmlString("?");
             var url = Global.UrlHelper();
             return
-                new MvcHtmlString(string.Format("<a href='{0}' title='$planet${4}' style='{5}'><img src='/img/planets/{1}' width='{2}'>{3}</a>",
+                new MvcHtmlString(string.Format("<a href='{0}' title='$planet${4}' style='{5}'><img src='/img/planetwars/planets/{1}' width='{2}'>{3}</a>",
                                                 url.Action("Planet", "Planetwars", new { id = planet.PlanetID }),
                                                 planet.Resource.MapPlanetWarsIcon,
                                                 planet.Resource.PlanetWarsIconSize/3,

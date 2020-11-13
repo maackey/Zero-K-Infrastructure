@@ -8,7 +8,7 @@
     grid.AddCol("ID", x => x.GalaxyID).SetSort(x => x.GalaxyID);
     grid.AddCol("Image", @<text>
                              <a href="@( Url.Action("Index", "Planetwars", new { galaxyId = item.GalaxyID }))">
-                                 <img src="@( GlobalConst.BaseSiteUrl)/img/galaxies/render_@( item.GalaxyID).jpg" style="height: 80px"/>
+                                 <img src="@( GlobalConst.BaseSiteUrl)/img/planetwars/galaxies/render_@( item.GalaxyID).jpg" style="height: 80px"/>
                              </a></text>).SetSort(x => x.GalaxyID);
     grid.AddCol("Started", x => x.Started).SetSort(x => x.Started);
     grid.AddCol("Ended", x => x.Ended).SetSort(x => x.Ended);

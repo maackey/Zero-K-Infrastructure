@@ -257,7 +257,7 @@ namespace ZeroKWeb.Controllers
             {
                 Galaxy gal = db.Galaxies.Single(x => x.GalaxyID == galaxyID);
 
-                using (Image background = Image.FromFile(Server.MapPath("/img/galaxies/" + gal.ImageName)))
+                using (Image background = Image.FromFile(Server.MapPath("/img/planetwars/galaxies/" + gal.ImageName)))
                 {
                     //var im = new Bitmap((int)(background.Width*zoom), (int)(background.Height*zoom));
                     var im = new Bitmap(background.Width, background.Height);
@@ -283,7 +283,7 @@ namespace ZeroKWeb.Controllers
                             string planetIconPath = null;
                             try
                             {
-                                planetIconPath = "/img/planets/" + (p.Resource.MapPlanetWarsIcon ?? "1.png"); // backup image is 1.png
+                                planetIconPath = "/img/planetwars/planets/" + (p.Resource.MapPlanetWarsIcon ?? "1.png"); // backup image is 1.png
                                 using (Image pi = Image.FromFile(Server.MapPath(planetIconPath)))
                                 {
                                     double aspect = pi.Height / (double)pi.Width;
@@ -324,7 +324,7 @@ namespace ZeroKWeb.Controllers
             if (galaxyID != null) gal = db.Galaxies.Single(x => x.GalaxyID == galaxyID);
             else gal = db.Galaxies.Single(x => x.IsDefault);
 
-            string cachePath = Server.MapPath(string.Format("/img/galaxies/render_{0}.jpg", gal.GalaxyID));
+            string cachePath = Server.MapPath(string.Format("/img/planetwars/galaxies/render_{0}.jpg", gal.GalaxyID));
             if (gal.IsDirty || !System.IO.File.Exists(cachePath))
             {
                 using (Bitmap im = GenerateGalaxyImage(gal.GalaxyID))

@@ -244,7 +244,7 @@ namespace ZeroKWeb.Controllers
             var map = db.Resources.Single(x => x.ResourceID == resourceID);
             res.ResourceID = resourceID;
             res.IconSize = map.PlanetWarsIconSize;
-            res.Icons = Directory.GetFiles(Server.MapPath("/img/planets")).Select(Path.GetFileName).ToList();
+            res.Icons = Directory.GetFiles(Server.MapPath("/img/planetwars/planets")).Select(Path.GetFileName).ToList();
             return View("PlanetImageSelect", res);
         }
 

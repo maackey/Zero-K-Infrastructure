@@ -63,12 +63,12 @@ namespace ZkData
 
         public string GetImageUrl()
         {
-            return string.Format((string)"/img/factions/{0}.png", (object)Shortcut);
+            return string.Format((string)"/img/planetwars/factions/{0}.png", (object)Shortcut);
         }
 
         public string GetShipImageUrl()
         {
-            return string.Format((string)"/img/factions/{0}_ship.png", (object)Shortcut);
+            return string.Format((string)"/img/planetwars/factions/{0}_ship.png", (object)Shortcut);
         }
 
         public static string FactionColor(Faction fac, int myFactionID)

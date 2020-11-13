@@ -115,7 +115,7 @@
 
 <div style="position: relative; z-index: 100" >
 	<div id="linkMap" style="position: absolute; z-index: 0"> </div>
-	<img src="/img/galaxies/render_@(g.GalaxyID).jpg" style="position: relative; top: 0; left: 0; z-index:-50; " width="@Model.Width" height="@Model.Height"/>
+	<img src="/img/planetwars/galaxies/render_@(g.GalaxyID).jpg" style="position: relative; top: 0; left: 0; z-index:-50; " width="@Model.Width" height="@Model.Height"/>
 	
 
 @foreach (var p in Model.Planets)
@@ -145,7 +145,7 @@
 
 		@if (autohost != null && autohost.Users.Count > 1)
 		{ 
-			<img src='/img/planetstatus/@(autohost.IsInGame ? "attacking" : "preparing")0.png' width='@(por.Width)' style='position:absolute; left: 0;'/>
+			<img src='/img/planetwars/planetstatus/@(autohost.IsInGame ? "attacking" : "preparing")0.png' width='@(por.Width)' style='position:absolute; left: 0;'/>
 		}
 		
 		<span style="position: absolute; left: @(-por.Width); top: @(por.Height/2);"  nicetitle="$planet$@p.PlanetID">
