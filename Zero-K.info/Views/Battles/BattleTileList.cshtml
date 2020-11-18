@@ -4,11 +4,17 @@
 	Layout = "";
 }
 <style>
-    .mission {
+    .mission > div {
         background: rgba(0,0,0,0.5);
         color: white;
         padding: 1em;
+        margin: 0.5em 0.25em;
+        transition: 0.5s;
     }
+    .mission > div:hover {
+        background: rgba(0,0,0,0.8);
+    }
+
     .mission h3, .duration {
         margin-bottom: 0.5em;
     }
@@ -18,12 +24,6 @@
     .place:before {
         content: "on ";
     }
-    /*.duration:before {
-        content: "(";
-    }
-    .duration:after {
-        content: ")";
-    }*/
     .mission img {
         margin-right: 1em;
         float: left;
@@ -51,8 +51,8 @@
     if (m.Battle.Duration > 30 * 60) { hourglass = "fa-hourglass-2"; }
     if (m.Battle.Duration > 45 * 60) { hourglass = "fa-hourglass-3"; }
 
-	<a href='@Url.Action("Detail", new { id = m.Battle.SpringBattleID })'>
-        <div class="mission">
+	<a class="mission" href='@Url.Action("Detail", new { id = m.Battle.SpringBattleID })'>
+        <div>
             <img src='/Resources/@m.Map.ThumbnailName' />
             <h3>@m.Battle.Title</h3>
 

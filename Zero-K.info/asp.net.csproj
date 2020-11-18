@@ -410,7 +410,6 @@
     <Content Include="Views\Home\UserTooltip.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\Punishment.cshtml" />
     <Content Include="Views\Users\AdminUserDetail.cshtml" />
-    <Content Include="Views\Users\ReportToAdmin.cshtml" />
     <Content Include="Views\Users\ReportLog.cshtml" />
     <Content Include="Views\Clans\ClansIndex.cshtml" />
     <Content Include="Views\Clans\Tooltip.cshtml" />
@@ -507,6 +506,7 @@
     <Content Include="Views\Shared\_rating.cshtml" />
     <Content Include="Styles\less\administration.less" />
     <Content Include="Styles\less\sliderrange.less" />
+    <Content Include="Styles\less\splash.less" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\_ViewStart.cshtml" />

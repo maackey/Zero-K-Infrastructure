@@ -6,30 +6,20 @@
     <h2 class="handle">
         @HtmlHelperExtensions.PrintAccount(Model)
         <span class="adminuser">
-            @if (Global.AccountID == Model.AccountID)
+            @if (Global.IsModerator)
             {
-                if (Global.IsModerator)
-                {
-                    // nothing required here
-                }
-                else
-                {
-                    // contact admins
-                    <a href=""><i class="fa fa-suitcase" style="color: inherit;"></i></a>
-                }
+                // admin user
+                <a href="/Users/AdminUserDetail/@(Model.AccountID)"><i class="fa fa-gavel"></i> <span class="full-text">Admin User</span></a>
+            }
+            else if (Global.AccountID == Model.AccountID)
+            {
+                // contact admins
+                <span class="a-link modal-open" data-modal="contactAdmins" style="color: inherit;"><i class="fa fa-paper-plane"></i> <span class="full-text">Conact Admins</span></span>
             }
             else
             {
-                if (Global.IsModerator)
-                {
-                    // admin user
-                    <a href="/Users/AdminUserDetail/@(Model.AccountID)"><i class="fa fa-gavel"></i></a>
-                }
-                else
-                {
-                    // report user
-                    <a href=""><i class="fa fa-flag"></i></a>
-                }
+                // report user
+                <span class="a-link modal-open" data-modal="reportUser"><i class="fa fa-flag"></i> <span class="full-text">Report User</span></span>
             }
         </span>
     </h2>
@@ -123,4 +113,45 @@
 
     <img class="rankbg" src="@Ratings.Ranks.GetRankBackgroundImagePath(Model)" />
 
+    <div id="reportUser" class="modal">
+        <i class="fa fa-close modal-close"></i>
+        <h2>Report abuse by player @Html.PrintAccount(Model)</h2>
+
+        <p>
+            Please describe briefly what has happened. 
+            Review the <a href="/mediawiki/index.php?title=Zero-K:Code_of_Conduct" target="_blank">Code of Conduct</a> if necessary. 
+            <b><i>Action is unlikely if a report should include evidence and doesn't.</i></b>
+        </p>
+        <p>
+            Be sure to include:
+        </p>
+        <ul>
+            <li>Link to the battle replay</li>
+            <li>Chat logs (<a href="https://pastebin.com/" target="_blank">Pastebin</a> for lengthy ones)</li>
+            <li>Screenshots</li>
+            <li>Any other relevant evidence</li>
+        </ul>
+        <p></p>
+
+        <form method="POST" action="@Url.Action("ReportToAdminSubmit")">
+            @Html.HiddenFor(x => x.AccountID)
+            <textarea id="text" name="text" rows="5" placeholder="A description of what occurred."></textarea>
+            <input type="submit" value="Report Player" />
+        </form>
+    </div>
+    <div id="contactAdmins" class="modal">
+        <i class="fa fa-close modal-close"></i>
+        <h2>Contact Administrators</h2>
+
+        <p>
+            Please describe briefly what has happened.
+            Give as much relevant information as possible to ensure your request is processed quickly.
+        </p>
+
+        <form method="POST" action="@Url.Action("ReportToAdminSubmit")">
+            @Html.HiddenFor(x => x.AccountID)
+            <textarea id="text" name="text" rows="5" placeholder="What would you like to say?"></textarea>
+            <input type="submit" value="Send Message" />
+        </form>
+    </div>
 </div>

@@ -31,7 +31,7 @@
         modactionclass = "warning";
     }
 }
-<div class="moderator-action @modactionclass @(Global.IsModerator ? "toggle" : "")" 
+<div class="moderator-action @modactionclass @(Global.IsModerator ? "admin-extra" : "")" 
      onclick="ToggleExtra('admin-extra-@p.PunishmentID')">
     <div class="header">
         @if (p.MessageOnly)
@@ -55,10 +55,25 @@
             <h3><span class="warning"><i class="fa fa-warning"></i> WARNING:</span> @p.Reason</h3>
         }
 
-        <div class="timeframe">
+        <div class="timeframe">    
+            @if (p.BanExpires != null)
+            {
+                TimeSpan timespan = p.BanExpires.Value - p.Time;
+                TimeSpan timespanexp = p.BanExpires.Value - DateTime.Now;
+                <div class="duration">Duration: @timespan.Duration().ToReadableTime()</div>
+                if (p.BanExpires > DateTime.Now)
+                {
+                <div class="expires">Expires in @timespanexp.Duration().ToReadableTime()</div>
+                }
+            }
+            else
+            {
+                <div class="duration">Duration: Permanent</div>
+            }
             <div class="issue">@Html.Raw(displayIssued)</div>
             <div class="expire">@Html.Raw(displayExpiry)</div>
         </div>
+
     </div>
 
     <div class="consequences">
@@ -114,7 +129,7 @@
 
     @if (Global.IsModerator)
     {
-        <div id="admin-extra-@p.PunishmentID" class="punishdetails hidden">
+        <div id="admin-extra-@p.PunishmentID" class="punishdetails admin">
             <div class="issuedby">Issued by: @Html.PrintAccount(p.AccountByCreatedAccountID)</div>
             <form action="@Url.Action("RemovePunishment", "Users")" method="post">
                 @Html.AntiForgeryToken()
@@ -123,15 +138,15 @@
             </form>
             @if (!string.IsNullOrEmpty(p.BanIP))
             {
-                <div class="blocker">IP block: @p.BanIP</div>
+                <div class="blocker"><i class="fa fa-cloud"></i> IP block: @p.BanIP</div>
             }
             @if (p.UserID != null)
             {
-                <div class="blocker">UserID block: @p.UserID</div>
+                <div class="blocker"><i class="fa fa-drivers-license"></i> UserID block: @p.UserID</div>
             }
             @if (!string.IsNullOrEmpty(p.InstallID))
             {
-                <div class="blocker">InstallID block: @p.InstallID</div>
+                <div class="blocker"><i class="fa fa-download"></i> InstallID block: @p.InstallID</div>
             }
         </div>
     }

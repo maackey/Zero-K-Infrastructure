@@ -2,19 +2,27 @@
 @import "colors.less";
 
 .warning {
-    color: yellow;
+    color: fadeout(yellow, 33%);
 }
 
 .punishment {
-    color: red;
+    color: fadeout(red, 33%);
 }
 
 .playerreports {
-    color: orange;
+    color: fadeout(orange, 33%);
 }
 
 .modal div {
     margin-bottom: 1em;
+}
+
+.abusereport {
+    .header {
+        background: fadeout(orange, 90%);
+        padding: 1em;
+        border-bottom: 1px solid fadeout(orange, 50%);
+    }
 }
 
 .moderator-action {
@@ -31,8 +39,8 @@
     }
 
     .header {
-        display: flex;
-        flex-direction: row;
+        /*display: flex;
+        flex-direction: row;*/
 
         h3 {
             width: 100%;
@@ -43,23 +51,27 @@
         color: @copy;
 
         .consequence {
-            display: inline-block;
+            display: block;
             background: @background-pop;
             padding: 0.5em;
             border: 1px solid darken(@background-pop, 20%);
             margin: 0.25em;
         }
+        @media screen and (max-width: 800px) {
+            .consequence {
+                display: inline-block;
+            }
+        }
     }
 
     .timeframe {
+        position: absolute;
+        top: 0;
+        right: 0;
         color: @copy;
         font-size: small;
         font-style: italic;
-        text-align: right;
-
-        .issue, .expire {
-            width: 15em;
-        }
+        float: right;
 
         .staticdate {
             display: none;
@@ -82,27 +94,41 @@
         }
 
         .blocker {
-            display: inline-block;
+            display: block;
             padding: 0.5em;
-            border: 1px solid red;
             margin: 0.25em;
+        }
+        @media screen and (max-width: 800px) {
+            .blocker {
+                display: inline-block;
+            }
         }
     }
 }
 
+
+
+.admin-extra {
+    cursor: pointer;
+}
 
 // rearrange when screen is small
 @media only screen and (max-width: 800px) {
     .moderator-action {
         .header {
             display: block;
+            flex: none;
         }
+
         .timeframe {
+            position: relative;
+            display: block;
+            float: none;
+
             text-align: left;
 
-            .issue, .expire {
+            .issue, .expire, .duration, .expires {
                 display: inline-block;
-                width: 15em;
             }
         }
     }

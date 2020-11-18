@@ -13,6 +13,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" href='@Href("~/img/favicon.png")' />
     <link rel="stylesheet/less" type="text/css" href="~/Styles/less/style.less" />
+    <link rel="stylesheet/less" type="text/css" href="~/Styles/less/splash.less" />
     @System.Web.Optimization.Styles.Render("~/bundles/maincss")
     @System.Web.Optimization.Scripts.Render("~/bundles/main")
 </head>
@@ -75,136 +76,6 @@
             $("#" + id).css("width", ww + offset).css("left", dx).css("height", wh + offset).css("top", dy);
         }
     </script>
-    <style>
-        .todo {
-            display: none;
-            position: absolute;
-            background: rgba(0,0,0,0.5);
-            padding: 2em;
-        }
-
-        * {
-            box-sizing: border-box;
-        }
-
-        nav {
-            position: fixed;
-            z-index: 1000;
-        }
-
-        h1 {
-            font-family: "Xolonium", sans-serif;
-            margin-bottom: 1em;
-        }
-
-        ul, li {
-            padding: 0.5em;
-            padding-left: 1em;
-            margin: 0;
-            list-style: none;
-        }
-
-        .splash {
-            background: rgba(0,0,0,0.75);
-            padding-top: 3em;
-            font-family: "OpenSans", sans-serif;
-        }
-
-        .hero {
-            position: relative;
-            background: black;
-            height: 80vh;
-            overflow: hidden;
-        }
-        .hero img {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 60%;
-        }
-        .hero canvas {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-        }
-
-        .stack {
-            background: linear-gradient(black, transparent 20%);
-            padding: 3em;
-        }
-
-        .pancake {
-            display: flex;
-            position: relative;
-            background: radial-gradient(circle, rgba(0,16,32,0.25) 35%, rgba(0,0,0,0.5) 100%);
-            padding: 0em;
-            margin-bottom: 2em;
-            vertical-align: top;
-        }
-        .pancake.odd {
-            flex-flow: row-reverse;
-        }
-
-        .butter {
-            padding: 2em;
-        }
-
-        .syrup {
-            background: rgba(0,0,0,0.75);
-            min-height: 350px;
-            /*padding: 2em;*/
-        }
-        iframe {
-            height: 350px;
-            width: 480px;
-        }
-
-        .download {
-            background: radial-gradient(circle, rgba(0,16,32,0.25) 35%, rgba(0,0,0,0.5) 100%);
-            max-width: 50%;
-            padding: 2em;
-            border: 1px solid transparent;
-            margin-left: auto;
-            margin-right: auto;
-            cursor: pointer;
-        }
-        .download h1 {
-            text-align: center;
-        }
-        .hero .download {
-            position: absolute;
-            background: rgba(0,0,0,0.8);
-            bottom: 2em;
-            right: 2em;
-            font-family: "Xoloniuum", sans-serif;
-            font-weight: bold;
-        }
-        .download:hover {
-            border: 1px solid magenta;
-        }
-
-        @@media only screen and (max-width: 800px) 
-        {
-            .pancake, .pancake.odd {
-                flex-flow: column-reverse;
-            }
-            .butter {
-                text-align: center;
-            }
-            .syrup {
-                max-height: 200px;
-                min-height: 200px;
-            }
-            iframe {
-                height: 200px;
-                width: 100%;
-            }
-            .download {
-                max-width: 100%;
-            }
-        }
-    </style>
-
     @Html.Partial("Navigation")
     <div class="splash">
         <div class="hero">
@@ -222,8 +93,8 @@
 
         </div>
         <div class="stack">
-            <div class="pancake">
-                <div class="butter">
+            <div class="section">
+                <div class="description">
                     <h1>DOMINATE</h1>
                     <h3>Rule the Battlefield</h3>
                     <ul>
@@ -233,13 +104,14 @@
                         <li>Terraform walls, ramps, and more
                     </ul>
                 </div>
-                <div class="syrup">
+                <div class="preview">
                     <span class="todo">[video snippets of large battles, terraformed defenses, campaign scenarios, etc.]</span>
-                    <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ?mute=1;autoplay=1" frameborder="0"></iframe>
+                    @*<iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ?mute=1;autoplay=1" frameborder="0"></iframe>*@
+                    <img src="~/img/landing/dominate.png" />
                 </div>
             </div>
-            <div class="pancake odd">
-                <div class="butter">
+            <div class="section odd">
+                <div class="description">
                     <h1>STAND OUT</h1>
                     <h3>Units are Unique and Useful</h3>
                     <ul>
@@ -248,13 +120,14 @@
                         <li>Massive variety of weapons, abilities, and movement types</li>
                     </ul>
                 </div>
-                <div class="syrup">
+                <div class="preview">
                     <span class="todo">[video snippets of fun stuff: lobster, space laser, placeholder, etc.]</span>
-                    <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ?mute=1;autoplay=1" frameborder="0"></iframe>
+                    @*<iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ?mute=1;autoplay=1" frameborder="0"></iframe>*@
+                    <img src="~/img/landing/standout.png" />
                 </div>
             </div>
-            <div class="pancake">
-                <div class="butter">
+            <div class="section">
+                <div class="description">
                     <h1>CONTROL</h1>
                     <h3>Powerful and Intuitive Interface</h3>
                     <ul>
@@ -264,13 +137,14 @@
                         <li>Set hotkeys to your heart's content</li>
                     </ul>
                 </div>
-                <div class="syrup">
+                <div class="preview">
                     <span class="todo">[video snippets of raiders dodging shots, custom formations, fiddling with interface/widgets]</span>
-                    <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ?mute=1;autoplay=1" frameborder="0"></iframe>
+                    @*<iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ?mute=1;autoplay=1" frameborder="0"></iframe>*@
+                    <img src="~/img/landing/control.png" />
                 </div>
             </div>
-            <div class="pancake odd">
-                <div class="butter">
+            <div class="section odd">
+                <div class="description">
                     <h1>JOIN US</h1>
                     <h3>Made BY Players, FOR Players</h3>
                     <ul>
@@ -280,9 +154,10 @@
                         <li>Free to play in the best way possible</li>
                     </ul>
                 </div>
-                <div class="syrup">
+                <div class="preview">
                     <span class="todo">[video snippets of dominatrix, rezzed enemy units, quotes from players]</span>
-                    <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ?mute=1;autoplay=1" frameborder="0"></iframe>
+                    @*<iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ?mute=1;autoplay=1" frameborder="0"></iframe>*@
+                    <img src="~/img/landing/joinus.png" />
                 </div>
             </div>
             <div class="download">

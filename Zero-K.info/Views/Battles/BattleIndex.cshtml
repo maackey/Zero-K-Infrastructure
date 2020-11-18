@@ -10,11 +10,13 @@
     });
     
     function InitSliderRange() {
-        function display(func, val) {
+        function display(func, val, softcap = null) {
             switch (func) {
                 case "minRank": return "<img src='Img/ranks/0_" + val + ".png' />"; break;
                 case "maxRank": return "<img src='Img/ranks/7_" + val + ".png' />"; break;
-                default: return val;
+                default:
+                    if (val == softcap) return "∞";
+                    else return val;
             }
         }
 
@@ -22,6 +24,7 @@
             // link relevant input fields
             var minField = $("#" + $(slider).data("min"));
             var maxField = $("#" + $(slider).data("max"));
+            var softcap = $(slider).data("softcap");
             var minValue = minField.attr("min");
             var maxValue = maxField.attr("max");
 
@@ -40,7 +43,7 @@
             min_handle.css("left", $(slider).children("#tickmark" + minValue).position().left - min_handle.width() / 2)
                 .html(display(min_handle.data("display"), minValue));
             max_handle.css("left", $(slider).children("#tickmark" + maxValue).position().left - max_handle.width() / 2)
-                .html(display(max_handle.data("display"), maxValue));
+                .html(display(max_handle.data("display"), maxValue, softcap));
 
             // bind events
             $(slider).mousedown(function (e) {
@@ -53,7 +56,8 @@
 
                 // grab closest handle
                 $(slider).data("handle", closest_handle);
-            }).mousemove(function (e) {
+            });
+            $(document).mousemove(function (e) {
                 // don't do anything if we're not dragging anything
                 var active_handle = $(slider).data("handle");
                 if (!active_handle) return;
@@ -73,7 +77,7 @@
 
                 // snap handle to tick location
                 var offset = closest_tick.position().left - active_handle.width() / 2;
-                var content = display(active_handle.data("display"), closest_tick.data("value"));
+                var content = display(active_handle.data("display"), closest_tick.data("value"), softcap);
                 active_handle.data("value", closest_tick.data("value")).css("left", offset).html(content);
 
                 // resize included range bar
@@ -82,6 +86,10 @@
                     .css("right", $(slider).width() - max_handle.position().left - max_handle.width());
 
             }).mouseup(function () {
+                // don't do anything if we're not dragging anything
+                var active_handle = $(slider).data("handle");
+                if (!active_handle) return;
+
                 // set hidden input values
                 $(minField).val(min_handle.data("value")).change();
                 $(maxField).val(max_handle.data("value")).change();
@@ -104,15 +112,15 @@
             <input id="Title" name="Title" type="text" placeholder="Room Title" />
             <input id="Map" name="Map" type="text" placeholder="Map" class="ui-autocomplete-input" autocomplete="off" data-autocomplete="/Autocomplete/Maps" data-autocomplete-action="submit" />
 
-            <label>Supported Maps</label>
+            @*<label>Supported Maps</label>
             <div class="slider-range" data-min="MinMapSupport" data-max="MaxMapSupport">
                 <div class="included-range"></div>
                 <div class="handle min-value" data-value="0"></div>
                 <div class="handle max-value" data-value="3"></div>
-            </div>
+            </div>*@
 
             <label>Game Duration</label>
-            <div class="slider-range" data-min="MinDuration" data-max="MaxDuration">
+            <div class="slider-range" data-min="MinDuration" data-max="MaxDuration" data-softcap="60">
                 <div class="included-range"></div>
                 <div class="handle min-value" data-value="0"></div>
                 <div class="handle max-value" data-value="60"></div>
@@ -121,7 +129,7 @@
             <input id="MaxDuration" name="MaxDuration" class="hidden" type="text" max="60" />
 
             <label>Player Count</label>
-            <div class="slider-range" data-min="PlayersFrom" data-max="PlayersTo">
+            <div class="slider-range" data-min="PlayersFrom" data-max="PlayersTo" data-softcap="32">
                 <div class="included-range"></div>
                 <div class="handle min-value" data-value="0"></div>
                 <div class="handle max-value" data-value="32"></div>

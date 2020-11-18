@@ -8,24 +8,6 @@
     var brokenIDs = new List<Int64>() { 1236934115, 1199297835, -2130083051, 195445522, 1141552226 };
     var smurfs = Model.GetSmurfs();
 
-    // TODO: move this to account property or get reference to linq?
-    int totalWarnings = 0;
-    foreach (var p in Model.PunishmentsByAccountID)
-    {
-        if (!p.hasConsequences && !p.MessageOnly)
-        {
-            totalWarnings++;
-        }
-    }
-    int totalPunishments = 0;
-    foreach (var p in Model.PunishmentsByAccountID)
-    {
-        if (p.hasConsequences)
-        {
-            totalPunishments++;
-        }
-    }
-
     Int64? lastUserID = null;
     if (Model.AccountUserIDs.Any())
     {
@@ -41,9 +23,12 @@
 
 <style>
 
+    #list-actions {
+        padding: 1em;
+    }
+
     .group {
         background: rgba(0,0,0,0.75);
-        padding: 1em;
         margin: 1em;
     }
 
@@ -64,10 +49,6 @@
         z-index: 999;
     }
 
-    .header-summary {
-        float: right;
-    }
-
     #list-ipaddresses, #list-smurfs, #list-userids {
         max-height: 80vw;
         overflow-y: scroll;
@@ -79,14 +60,15 @@
         Administration: @Html.PrintAccount(Model, true, true)
         <span class="header-summary">
             <span class="playerreports"><i class="fa fa-flag"></i>@Model.AbuseReportsByAccountID.Count</span>
-            <span class="warning"><i class="fa fa-warning"></i>@totalWarnings</span>
-            <span class="punishment"><i class="fa fa-gavel"></i>@totalPunishments</span>
+            <span class="warning"><i class="fa fa-warning"></i>@Model.TotalWarnings</span>
+            <span class="punishment"><i class="fa fa-gavel"></i>@Model.TotalPunishments</span>
         </span>
     </div>
 </div>
-<div class="">
+<div class="adminuser">
     <div class="group user-info">
-        <h1 class="toggle" onclick="ToggleExtra('list-userinfo')">
+        <h1 class="toggle" onclick="ToggleExtra('list-userinfo', this)">
+            <i class="toggle-indicator fa fa-caret-down"></i>
             User Info
             <span class="header-summary">
                 <span class="smurfs"><i class="fa fa-user-secret"></i> @smurfs.Count()</span>
@@ -119,10 +101,11 @@
             <div><span class="infokey">Last Chat Read:</span> <span class="infovalue">@Model.LastChatRead</span></div>
 
             <div class="group">
-                <h3 class="toggle" onclick="ToggleExtra('list-smurfs')">
+                <h3 class="toggle" onclick="ToggleExtra('list-smurfs', this)">
+                    <i class="toggle-indicator fa fa-caret-down"></i>
                     Smurfs <span class="smurfs"><i class="fa fa-user-secret"></i> @smurfs.Count()</span>
                 </h3>
-                <div id="list-smurfs" class="hidden">
+                <div id="list-smurfs" class="">
                     @foreach (var ac in smurfs)
                     {
                         <div class="smurf">
@@ -136,10 +119,11 @@
                 </div>
             </div>
             <div class="group">
-                <h3 class="toggle" onclick="ToggleExtra('list-userids')">
+                <h3 class="toggle" onclick="ToggleExtra('list-userids', this)">
+                    <i class="toggle-indicator fa fa-caret-down"></i>
                     User Ids <span class=""><i class="fa fa-drivers-license"></i> @Model.AccountUserIDs.Count()</span>
                 </h3>
-                <div id="list-userids" class="hidden">
+                <div id="list-userids" class="">
                     <table>
                         <thead>
                             <tr>
@@ -166,10 +150,11 @@
                 </div>
             </div>
             <div class="group">
-                <h3 class="toggle" onclick="ToggleExtra('list-ipaddresses')">
+                <h3 class="toggle" onclick="ToggleExtra('list-ipaddresses', this)">
+                    <i class="toggle-indicator fa fa-caret-down"></i>
                     IP Addresses <span class=""><i class="fa fa-cloud"></i> @Model.AccountIPs.Count()</span>
                 </h3>
-                <div id="list-ipaddresses" class="hidden">
+                <div id="list-ipaddresses" class="">
                     <table>
                         <thead>
                             <tr>
@@ -197,41 +182,44 @@
         </div>
     </div>
     <div class="group abuse-reports">
-        <h1 class="toggle" onclick="ToggleExtra('list-reports')">
+        <h1 class="toggle" onclick="ToggleExtra('list-reports', this)">
+            <i class="toggle-indicator fa fa-caret-down"></i>
             Abuse reports <span class="header-summary playerreports"><i class="fa fa-flag"></i>@Model.AbuseReportsByAccountID.Count</span>
         </h1>
-        <div id="list-reports" class="hidden">
-            <table>
-                <tbody style="vertical-align:top; background-color:#222">
-                    @foreach (var a in Model.AbuseReportsByAccountID)
-                    {
-                        <tr><td>@a.Time</td><td>@Html.PrintAccount(a.AccountByReporterAccountID, true, true)</td><td style="padding-bottom:25px;">@Html.BBCode(a.Text)</td></tr>
-                    }
-                </tbody>
-            </table>
+        <div id="list-reports" class="">
+            @foreach (var report in Model.AbuseReportsByAccountID)
+            {
+                <div class="abusereport">
+                    <div class="header">
+                        @Html.PrintAccount(report.AccountByReporterAccountID, true, true) @report.Time.ToAgoString()
+                        <span class="time">@report.Time</span>
+                    </div>
+                    <div class="content">
+                        @Html.BBCode(report.Text)
+                    </div>
+                </div>
+            }
         </div>
     </div>
     <div class="group penalties">
-        <h1 class="toggle" onclick="ToggleExtra('list-penalties')">
+        <h1 class="toggle" onclick="ToggleExtra('list-penalties', this)">
+            <i class="toggle-indicator fa fa-caret-down"></i>
             Penalties
             <span class="header-summary">
-                <span class="warning"><i class="fa fa-warning"></i>@totalWarnings</span>
-                <span class="punishment"><i class="fa fa-gavel"></i>@totalPunishments</span>
+                <span class="warning"><i class="fa fa-warning"></i>@Model.TotalWarnings</span>
+                <span class="punishment"><i class="fa fa-gavel"></i>@Model.TotalPunishments</span>
             </span>
         </h1>
-        <div id="list-penalties" class="hidden">
-
+        <div id="list-penalties" class="">
             @if (Model.PunishmentsByAccountID.Any())
             {
+                <h2 class="center">Active</h2>
                 foreach (Punishment p in Model.PunishmentsByAccountID.Where(x => !x.IsExpired).OrderByDescending(x => x.Time))
                 {
                     @Html.DisplayFor(x => p)
                 }
-            }
-            <hr />
-            <h2>Expired</h2>
-            @if (Model.PunishmentsByAccountID.Any())
-            {
+                <hr />
+                <h2 class="center">Expired</h2>
                 foreach (Punishment p in Model.PunishmentsByAccountID.Where(x => x.IsExpired).OrderByDescending(x => x.Time))
                 {
                     @Html.DisplayFor(x => p)
@@ -240,7 +228,10 @@
         </div>
     </div>
     <div class="group actions">
-        <h1 class="toggle" onclick="ToggleExtra('list-actions')">Actions</h1>
+        <h1 class="toggle" onclick="ToggleExtra('list-actions', this)">
+            <i class="toggle-indicator fa fa-caret-down"></i>
+            Actions
+        </h1>
         <div id="list-actions">
 
             <input type="button" class="modal-open" data-modal="resetPassword" value="Reset Password" />
@@ -662,4 +653,5 @@
             </div>
         </div>
     </div>
+    <br /><br /><br /><br />
 </div>

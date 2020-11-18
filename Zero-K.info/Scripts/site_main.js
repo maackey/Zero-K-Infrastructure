@@ -159,25 +159,29 @@ function ToggleExtra(id, e) {
     var target = $("#" + id);
     if (!target) return;
 
+    // toggle target visibility
+    var target_state;
+    if (target.is(":visible")) {
+        target.slideUp();
+        target_state = "up";
+    } else {
+        target.slideDown();
+        target_state = "down";
+    }
+
     // update toggle indicator if present
     if (e) {
         var indicator = $(e).children(".toggle-indicator");
         var upclass = "fa-caret-up"; //"fa-chevron-circle-up";
         var downclass = "fa-caret-down"; //"fa-chevron-circle-down";
 
-        if (indicator.hasClass(upclass)) {
+        if (target_state == "up") {
             indicator.removeClass(upclass).addClass(downclass);
-        } else if (indicator.hasClass(downclass)) {
+        } else if (target_state == "down") {
             indicator.removeClass(downclass).addClass(upclass);
         }
     }
 
-    // toggle target visibility
-    if (target.is(":visible")) {
-        target.slideUp();
-    } else {
-        target.slideDown();
-    }
 }
 
 function InitResourceRating() {
