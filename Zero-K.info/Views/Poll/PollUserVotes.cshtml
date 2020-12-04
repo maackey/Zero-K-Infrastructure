@@ -2,42 +2,46 @@
 @using ZeroKWeb
 @using ZkData
 @model ZkData.Account
-<h2>Voting details for @Html.PrintAccount(Model)</h2>
 
-@foreach (var p in Account.ValidPolls(Global.Account).OrderByDescending(x => x.IsVisible).ThenByDescending(x=>x.PollID))
-{
-    if (p.IsVisible || Global.IsModerator)
+<div class="content">
+    <h1>Voting details for @Html.PrintAccount(Model)</h1>
+
+    @foreach (var p in Account.ValidPolls(Global.Account).OrderByDescending(x => x.IsVisible).ThenByDescending(x => x.PollID))
     {
-        <div style="@(p.IsHeadline ? " border: 1px solid green" : (p.IsVisible ? "":" border: 1px dashed gray;")); margin: 2px; padding: 1px">
-            @Html.Partial("PollView", p)
+        if (p.IsVisible || Global.IsModerator)
+        {
+            <div style="@(p.IsHeadline ? " border: 1px solid green" : (p.IsVisible ? "":" border: 1px dashed gray;")); margin: 2px; padding: 1px">
+                @Html.Partial("PollView", p)
 
-            @if (!p.IsAnonymous)
-            {
-                var vote = Model != null ? p.PollVotes.FirstOrDefault(x => x.AccountID == Model.AccountID) : null;
-                if (vote != null)
+                @if (!p.IsAnonymous)
                 {
-                    if (!p.IsAnonymous)
+                    var vote = Model != null ? p.PollVotes.FirstOrDefault(x => x.AccountID == Model.AccountID) : null;
+                    if (vote != null)
                     {
-                        <span>Voted: @vote.PollOption.OptionText</span>
-                    }
-                    else
-                    {
-                        <span>Voted</span>
+                        if (!p.IsAnonymous)
+                        {
+                            <span>Voted: @vote.PollOption.OptionText</span>
+                        }
+                        else
+                        {
+                            <span>Voted</span>
+                        }
                     }
                 }
-            }
 
-            @if (Global.IsModerator && p.ExpireBy == null)
-            {
-                <div class="admin">
-                <br/>
-                @Html.ActionLink(p.IsVisible ? "visible, hide completely?" : "hidden, show in this list?", "SwapVisible", new { pollID = p.PollID })<br />
-                @Html.ActionLink(p.IsHeadline ? "HEADLINE, stop displaying on home?" : "add to home headline?", "SwapHeadline", new { pollID = p.PollID })<br/>
-                </div>
-            }
-        </div>
-    } 
-}
+                @if (Global.IsModerator && p.ExpireBy == null)
+                {
+                    <div class="admin">
+                        <br />
+                        @Html.ActionLink(p.IsVisible ? "visible, hide completely?" : "hidden, show in this list?", "SwapVisible", new { pollID = p.PollID })<br />
+                        @Html.ActionLink(p.IsHeadline ? "HEADLINE, stop displaying on home?" : "add to home headline?", "SwapHeadline", new { pollID = p.PollID })<br />
+                    </div>
+                }
+            </div>
+        }
+    }
+</div>
+
 
 @if (Global.IsModerator)
 {
@@ -45,12 +49,18 @@
         <h3>Add a new poll</h3>
         <form action="@Url.Action("NewPoll")" method="POST">
             @Html.AntiForgeryToken()
-            Is anonymous: <input type="checkbox" name="isAnonymous" value="true" /><br/>
-            Question: <br/>
-            <input type="text" name="question" style="width: 600px"/><br/>
-            Answers (one per line):<br/>
-            <textarea name="answers" rows="6" style="width: 600px"></textarea><br/>
-            <input type="submit" value="add" class="js_confirm" />
+            <label class="switch">
+                <input id="isAnonymous" name="isAnonymous" type="checkbox" />
+                <span class="slider"></span>
+            </label>
+            <label for="isAnonymous">Is Anonymous</label>
+
+            <input type="text" name="question" placeholder="Question" />
+
+            <label for="answers">One answer per line</label>
+            <textarea id="answers" name="answers" placeholder="Answers"></textarea>
+
+            <input type="submit" value="Create Poll" class="js_confirm" />
 
         </form>
     </div>

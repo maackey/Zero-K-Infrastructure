@@ -33,11 +33,15 @@
         </a>
     </div>
     <div class="map-info">
-        <b>@m.InternalName</b> by @authors
+        <b class="center">@m.InternalName</b>
+        @if (!string.IsNullOrEmpty(m.AuthorName))
+        {
+            <b class="center">by @authors</b>
+        }
 
-        <span class="popularity">
+        @*<span class="popularity">
             <i class="fa fa-download"></i><span class="full-text">Downloads:</span> @m.DownloadCount
-        </span>
+        </span>*@
     </div>
 </div>
 <div id="mapdetail" class="content">

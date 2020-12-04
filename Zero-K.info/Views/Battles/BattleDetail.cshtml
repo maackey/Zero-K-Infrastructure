@@ -33,6 +33,7 @@
         height: 80vh;
         text-align: center;
     }
+
     .battlefield > img {
         /*position: absolute;*/
         display: block;
@@ -41,6 +42,7 @@
         margin-left: auto;
         margin-right: auto;
     }
+
     .teams {
         position: absolute;
         top: 0;
@@ -52,23 +54,62 @@
         justify-content: space-around;
         z-index: 2;
     }
+
     .team, .spectators {
         background: rgba(0,0,0,0.8);
         padding: 1em;
     }
+
     .spectators {
         display: inline-block;
         text-align: left;
     }
+
     .infowrapper {
         margin: 1em auto;
         text-align: center;
     }
+
     .info {
         display: inline-block;
         text-align: left;
     }
+
+    .replay-actions {
+        position: absolute;
+        left: 1em;
+        right: 1em;
+    }
 </style>
+<div class="page-summary">
+    <div class="replay-actions">
+        <a class="replay-action back" href="@Url.Action("Index")">
+            <i class="fa fa-share fa-flip-horizontal"></i><span class="full-text">Back to List</span>
+        </a>
+        @if (!string.IsNullOrEmpty(Model.ReplayFileName))
+        {
+            // TODO: is SpringBattleID included in start replay string?
+            //Html.PrintSpringLink(string.Format("@start_replay:{0},{1},{2},{3}",
+            //GlobalConst.BaseSiteUrl + "/replays/" + Path.GetFileName(Model.ReplayFileName),
+            //Model.ResourceByModResourceID.InternalName,
+            //Model.ResourceByMapResourceID.InternalName,
+            //Model.EngineVersion,
+            //Model.SpringBattleID))
+            MvcHtmlString url = Html.PrintSpringLink($"@start_replay:{GlobalConst.BaseSiteUrl}/replays/{Path.GetFileName(Model.ReplayFileName)},{Model.ResourceByModResourceID.InternalName},{Model.ResourceByMapResourceID.InternalName},{Model.EngineVersion},{Model.SpringBattleID}");
+            <a class="replay-action playnow" href="@url">
+                <i class="fa fa-share"></i><span class="full-text">Watch Now</span>
+            </a>
+        }
+    </div>
+    <div class="replay-info">
+        <b class="center">@Model.Teams on @Model.ResourceByMapResourceID.InternalName</b>
+        <b class="center">@Html.Raw(subtitle)</b>
+
+        @*<span class="popularity">
+            <i class="fa fa-download"></i><span class="full-text">Downloads:</span> @m.DownloadCount
+        </span>*@
+    </div>
+</div>
 <div class="content">
     <div class="replay-actions">
         <a class="replay-action back" href="@Url.Action("Index")">
@@ -91,6 +132,7 @@
     </div>
     <h1 class="center">@Model.Teams on @Model.ResourceByMapResourceID.InternalName</h1>
     <h2 class="center">@Html.Raw(subtitle)</h2>
+    <div id="summarytransition"></div>
     <div class="battlefield">
         <img src='/Resources/@Model.ResourceByMapResourceID.MinimapName' alt="@Model.ResourceByMapResourceID.InternalName" />
 
@@ -216,7 +258,8 @@
 </div>
 @if (!ViewBag.ShowWinners)
 {
-    <a class="textbutton" href="@Url.Action("Detail", new { id = Model.SpringBattleID, ShowWinners = true })">Show winners</a><br />
+    <a class="textbutton" href="@Url.Action("Detail", new { id = Model.SpringBattleID, ShowWinners = true })">Show winners</a>
+    <br />
 }
 <br />
 @if (Global.IsModerator)

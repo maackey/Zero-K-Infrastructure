@@ -7,12 +7,14 @@
     .mission > div {
         background: rgba(0,0,0,0.5);
         color: white;
-        padding: 1em;
-        margin: 0.5em 0.25em;
         transition: 0.5s;
     }
     .mission > div:hover {
         background: rgba(0,0,0,0.8);
+    }
+    .battle-contents {
+        padding: 1em;
+        margin: 0.5em 0.25em;
     }
 
     .mission h3, .duration {
@@ -52,17 +54,21 @@
     if (m.Battle.Duration > 45 * 60) { hourglass = "fa-hourglass-3"; }
 
 	<a class="mission" href='@Url.Action("Detail", new { id = m.Battle.SpringBattleID })'>
-        <div>
-            <img src='/Resources/@m.Map.ThumbnailName' />
-            <h3>@m.Battle.Title</h3>
+        <div class="corners-wrapper">
+            <div class="battle-contents">
+                <img src='/Resources/@m.Map.ThumbnailName' />
+                <h3>@m.Battle.Title</h3>
 
-            <div class="players">@m.Battle.Teams</div>
-            <div class="place">@m.Map.InternalName</div>
-            <div class="nonplayers">@Html.Raw(nonplayers)</div>
-            <div class="duration"><i class='fa @hourglass'></i> @TimeSpan.FromSeconds(m.Battle.Duration).ToReadableTime()</div>
+                <div class="players">@m.Battle.Teams</div>
+                <div class="place">@m.Map.InternalName</div>
+                <div class="nonplayers">@Html.Raw(nonplayers)</div>
+                <div class="duration"><i class='fa @hourglass'></i> @TimeSpan.FromSeconds(m.Battle.Duration).ToReadableTime()</div>
 
-            <div class="time">@m.Battle.StartTime - @((DateTime.UtcNow - m.Battle.StartTime).ToAgoString())</div>
-            <br style="clear: both;" />
+                <div class="time">@m.Battle.StartTime - @((DateTime.UtcNow - m.Battle.StartTime).ToAgoString())</div>
+                <br style="clear: both;" />
+            </div>
+            <div class="corners corners-top"></div>
+            <div class="corners corners-bottom"></div>
         </div>
 	</a>
 }

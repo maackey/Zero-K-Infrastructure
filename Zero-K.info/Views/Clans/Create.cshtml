@@ -1,85 +1,49 @@
 @using ZkData
 @model ZkData.Clan
-<form method="post" action="@Url.Action("SubmitCreate")" enctype="multipart/form-data">
-    @Html.HiddenFor(x => x.ClanID)
-  
-    <table>
-        <tr>
-            <td>
-                Name:<br/>
-                NOTE: for consistency reasons make sure it matches theme of Planetwars and the faction you choose
-            </td>
-            <td>
-                @Html.TextBoxFor(x => x.ClanName, new { maxlength = 50 })
-            </td>
-        </tr>
-        <tr>
-            <td>
-                Shortcut:
-            </td>
-            <td>
-                @Html.TextBoxFor(x => x.Shortcut, new { maxlength = 6 })
-            </td>
-        </tr>
-  
+
+<div class="content">
+    @if (Model.ClanID == 0)
+    {
+        <h1 class="center">Create New Clan</h1>
+    }
+    else
+    {
+        <h1 class="center">Update Clan</h1>
+    }
+    <div>
+        <i class="fa fa-warning"></i> Clan settings should be consistent with the parent faction.
+        <br />
+        <br />
+    </div>
+    <form method="post" action="@Url.Action("SubmitCreate")" enctype="multipart/form-data">
+        @Html.HiddenFor(x => x.ClanID)
+        <input type="text" id="ClanName" name="ClanName" maxlength="50" placeholder="Clan Name" />
+        <input type="text" id="Shortcut" name="Shortcut" maxlength="6" placeholder="Clan Tag" />
         @if (GlobalConst.CanChangeClanFaction || Model.ClanID == 0)
         {
-            <tr><td>Faction:</td>
-                <td>@Html.DropDownListFor(x => x.FactionID, new ZkDataContext().Factions.Where(x => !x.IsDeleted).Shuffle().Select(x => new SelectListItem { Text = x.Name, Value = x.FactionID.ToString(), Selected = x.FactionID == Model.FactionID }))  <a href='/Wiki/PlanetWarsFactions'>read more</a>
-                    <br />No faction? @Html.CheckBox("noFaction", (Model.ClanID != 0 && Model.Faction == null))
-                </td>
-            </tr>
+            <label for="FactionID">Select a faction to join.</label>
+            List<SelectListItem> factionList = new List<SelectListItem> { new SelectListItem { Text = "No Faction", Value = "0" } };
+            factionList.AddRange(new ZkDataContext().Factions.Where(x => !x.IsDeleted).Shuffle().Select(
+                x => new SelectListItem { Text = x.Name, Value = x.FactionID.ToString(), Selected = x.FactionID == Model.FactionID }));
+            @Html.DropDownListFor(x => x.FactionID, factionList)
         }
         else
         {
             @Html.HiddenFor(x => x.FactionID)
         }
-      
-
-        <tr>
-            <td>
-                Password (leave blank to allow any to join):
-            </td>
-            <td>@Html.TextBoxFor(x => x.Password, new { maxlength = 20 })
-            </td>
-        </tr>
-        <tr>
-            <td>
-                Image (64x64 png with transparency):<br/>
-                NOTE: for consistency reasons make sure it matches color of the faction and is thematically matching (no troll face or cat if you are killer robots faction)
-            </td>
-            <td>
-                <img src='@Model.GetImageUrl()' />
-                <input type="file" name="image" />
-            </td>
-        </tr>
-        <tr>
-            <td>
-                Background Image for your clan page (png with transparency):
-            </td>
-            <td>
-                <img src='@Model.GetBGImageUrl()' width='128px' />
-                <input type="file" name="bgimage" />
-            </td>
-        </tr>
-        <tr>
-            <td>
-                Topic (internal info):
-            </td>
-            <td>
-                @Html.TextAreaFor(x => x.SecretTopic, 4, 40, new { maxlength = 500 })
-            </td>
-        </tr>
-        <tr>
-            <td>
-                Description (public):
-            </td>
-            <td>
-                @Html.TextAreaFor(x => x.Description, 4, 40, new { maxlength = 500 })
-            </td>
-        </tr>
-        <tr>
-            <td colspan='2'><input type='submit' value="Submit"/></td>
-        </tr>
-    </table>
-</form>
+        <input type="text" id="Password" name="Password" maxlength="20" placeholder="Clan Password" />
+        <div>
+            <label for="image">Image (64x64 transparent png)</label>
+            <input type="file" id="image" name="image" />
+            <img src="@Model.GetImageUrl()" />
+        </div>
+        <div>
+            <label for="bgimage">Background Image for the clan page</label>
+            <input type="file" id="bgimage" name="bgimage" />
+            <img src="@Model.GetBGImageUrl()" />
+        </div>
+        <textarea id="SecretTopic" name="SecretTopic" maxlength="500" placeholder="Internal Topic (not visible to those outside clan)"></textarea>
+        <textarea id="Description" name="Description" maxlength="500" placeholder="Public Description"></textarea>
+        <input type="submit" value="@(Model.ClanID == 0 ? "Create New Clan" : "Update Clan")" />
+    </form>
+</div>

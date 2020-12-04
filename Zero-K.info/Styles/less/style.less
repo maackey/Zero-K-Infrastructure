@@ -11,8 +11,8 @@
 @import "ternaryswitch.less";
 @import "administration.less";
 
-/* fixes some of the modern browser buggery */
 * {
+    /* fixes some of the modern browser buggery */
     box-sizing: border-box;
     padding: 0;
     margin: 0;
@@ -186,8 +186,65 @@ li, ul, ol {
 }
 
 .content {
+    position: relative;
     padding: 1em;
     /*background: @background;*/
+}
+
+.corners-wrapper {
+    position: relative;
+}
+.corners {
+    position: absolute;
+    width: 100%;
+    z-index: 10;
+}
+.corners::before, .corners::after {
+    content: "";
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border-color: @highlight;
+    border-style: solid;
+    transition-duration: 0.5s;
+}
+.corners::before {
+    left: 0;
+}
+.corners::after {
+    right: 0;
+}
+.corners-top {
+    top: 0;
+    transition-duration: 0.5s;
+}
+.corners-bottom {
+    bottom: 11px;
+    transition-duration: 0.5s;
+}
+.corners-top::before {
+    border-width: 1px 0 0 1px;
+}
+.corners-top::after {
+    border-width: 1px 1px 0 0;
+}
+.corners-bottom::before {
+    border-width: 0 0 1px 1px;
+}
+.corners-bottom::after {
+    border-width: 0 1px 1px 0;
+}
+.corners-wrapper:hover .corners::before {
+    left: 10px;
+}
+.corners-wrapper:hover .corners::after {
+    right: 10px;
+}
+.corners-wrapper:hover .corners-top {
+    top: 10px;
+}
+.corners-wrapper:hover .corners-bottom {
+    bottom: 20px;
 }
 
 .flex {
