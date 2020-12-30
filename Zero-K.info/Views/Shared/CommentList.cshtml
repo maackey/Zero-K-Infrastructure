@@ -1,5 +1,6 @@
 ﻿@model ZeroKWeb.Models.CommentList
 <div id="comments" class="forum">
+	<h2>@Model.Title</h2>
 	<form method="post" action="@Url.Action("SubmitPost", "Forum", Model.ActionData ?? new { threadID = Model.Thread.ForumThreadID })">
 		<textarea name="text"></textarea>
 		<input class="textbutton" type="submit" value="Submit Comment" />

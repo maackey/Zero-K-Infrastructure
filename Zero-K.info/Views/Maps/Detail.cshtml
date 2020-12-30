@@ -72,9 +72,12 @@
         </div>
     </div>
 
-    @if (Model.MapInfo != null)
+    @if (!string.IsNullOrEmpty(Model.MapInfo?.Description))
     {
-        <div>Description: @Model.MapInfo.Description</div>
+        <div class="map-description">
+            <b>Description:</b> 
+            @Model.MapInfo.Description
+        </div>
     }
 
     @if (ZeroKWeb.Global.IsModerator)
@@ -183,7 +186,11 @@
         </div>
     }
 
-    @{Html.RenderPartial("CommentList", new ZeroKWeb.Models.CommentList() { Thread = Model.Resource.ForumThread, ActionData = new { resourceID = m.ResourceID, threadID = m.ForumThreadID } });}
+    @{Html.RenderPartial("CommentList", new ZeroKWeb.Models.CommentList() {
+          Title = "Map Discussion",
+          Thread = Model.Resource.ForumThread, 
+          ActionData = new { resourceID = m.ResourceID, threadID = m.ForumThreadID } 
+      });}
 
 </div>
 

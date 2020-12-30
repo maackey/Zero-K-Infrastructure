@@ -28,26 +28,12 @@
     }
 }
 <style>
-    .battlefield {
-        position: relative;
-        height: 80vh;
-        text-align: center;
+    .map-preview {
+        display: inline-block;
+        height: 300px;
+        padding: 1em;
     }
-
-    .battlefield > img {
-        /*position: absolute;*/
-        display: block;
-        height: 80vh;
-        max-width: 100%;
-        margin-left: auto;
-        margin-right: auto;
-    }
-
     .teams {
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
         display: flex;
         flex-direction: row;
         flex-wrap: wrap;
@@ -72,13 +58,16 @@
 
     .info {
         display: inline-block;
+        padding: 1em;
         text-align: left;
+        vertical-align: top;
     }
 
     .replay-actions {
         position: absolute;
         left: 1em;
         right: 1em;
+        margin-bottom: 1em;
     }
 </style>
 <div class="page-summary">
@@ -102,7 +91,7 @@
         }
     </div>
     <div class="replay-info">
-        <b class="center">@Model.Teams on @Model.ResourceByMapResourceID.InternalName</b>
+        <b class="center">@Html.PrintBattle(Model)</b>
         <b class="center">@Html.Raw(subtitle)</b>
 
         @*<span class="popularity">
@@ -130,12 +119,17 @@
             </a>
         }
     </div>
-    <h1 class="center">@Model.Teams on @Model.ResourceByMapResourceID.InternalName</h1>
+    <h1 class="center">@Html.PrintBattle(Model)</h1>
     <h2 class="center">@Html.Raw(subtitle)</h2>
     <div id="summarytransition"></div>
-    <div class="battlefield">
-        <img src='/Resources/@Model.ResourceByMapResourceID.MinimapName' alt="@Model.ResourceByMapResourceID.InternalName" />
+    <div class="participants">
 
+        @if (!ViewBag.ShowWinners)
+        {
+            <div>
+                <a class="textbutton center" href="@Url.Action("Detail", new { id = Model.SpringBattleID, ShowWinners = true })">Show winners</a>
+            </div>
+        }
         <div class="teams">
             @foreach (var allyID in allAllyIDs)
             {
@@ -183,28 +177,32 @@
                     }
                 </div>
             }
+
+            @if (Model.SpectatorCount > 0)
+            {
+                <div class="spectators">
+                    <h3>Spectators</h3>
+                    @foreach (var spec in Model.SpringBattlePlayers.Where(x => x.IsSpectator))
+                    {
+                        <div class="spectator">@Html.PrintAccount(spec.Account)</div>
+                    }
+                </div>
+            }
         </div>
     </div>
     <div class="infowrapper">
-        @if (Model.SpectatorCount > 0)
-        {
-            <div class="spectators">
-                <h3>Spectators</h3>
-                @foreach (var spec in Model.SpringBattlePlayers.Where(x => x.IsSpectator))
-                {
-                    <div class="spectator">@Html.PrintAccount(spec.Account)</div>
-                }
-            </div>
-        }
-    </div>
-    <div class="infowrapper">
+        <a href="@Url.Action("Detail", "Maps", new { id = Model.MapResourceID })">
+            <img src='/Resources/@Model.ResourceByMapResourceID.MinimapName' 
+                 alt="@Model.ResourceByMapResourceID.InternalName"
+                 class="map-preview" />
+        </a>
+        
+
         <div class="info">
             <div>
                 <div class="infokey">Map: </div>
                 <div class="infovalue">
-                    <a href="@Url.Action("Detail", "Maps", new { id = Model.MapResourceID })">
-                        @Model.ResourceByMapResourceID.InternalName
-                    </a>
+                    @Model.ResourceByMapResourceID.InternalName
                 </div>
             </div>
             <div>
@@ -256,12 +254,7 @@
         }
     </div>
 </div>
-@if (!ViewBag.ShowWinners)
-{
-    <a class="textbutton" href="@Url.Action("Detail", new { id = Model.SpringBattleID, ShowWinners = true })">Show winners</a>
-    <br />
-}
-<br />
+
 @if (Global.IsModerator)
 {
     <div class="admin">
@@ -274,12 +267,14 @@
         </form>
     </div>
 }
-<br />
+
 @if (Model.Events.Any())
 {
-    <h3>
-        PlanetWars events
-    </h3>
+    <h3>PlanetWars events</h3>
     @Html.Action("Events", "Planetwars", new { springBattleID = Model.SpringBattleID, partial = true })
 }
-@{Html.RenderPartial("CommentList", new ZeroKWeb.Models.CommentList() { Thread = Model.ForumThread, ActionData = new { springBattleID = Model.SpringBattleID, threadID = Model.ForumThreadID } });}
+@{Html.RenderPartial("CommentList", new ZeroKWeb.Models.CommentList() {
+      Title = "Battle Discussion",
+      Thread = Model.ForumThread, 
+      ActionData = new { springBattleID = Model.SpringBattleID, threadID = Model.ForumThreadID } 
+  });}

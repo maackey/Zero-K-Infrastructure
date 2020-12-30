@@ -85,7 +85,7 @@ namespace ZkData
         {
             get
             {
-                return string.Join(" v ", SpringBattlePlayers.Where(p => !p.IsSpectator).GroupBy(p => p.AllyNumber).Select(g => g.Count()));
+                return string.Join("v", SpringBattlePlayers.Where(p => !p.IsSpectator).GroupBy(p => p.AllyNumber).Select(g => g.Count()));
             }
         }
         public int SpectatorCount

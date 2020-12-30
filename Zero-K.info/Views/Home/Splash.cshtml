@@ -19,6 +19,9 @@
 </head>
 <body>
     <script>
+        function downloadGame() {
+            window.href = 'steam://run/334920';
+        }
         var mouse_pos = {x: 0, y: 0};
         $(document).ready(function () {
             initCanvas("starlayer1", 10, 300);
@@ -83,7 +86,7 @@
             <canvas id="starlayer1"></canvas>
             <canvas id="starlayer2"></canvas>
             <img src="~/img/zk_logo.png" />
-            <input type="button" class="download" value="Download Now" />
+            <input type="button" class="download" value="Download Now" onclick="downloadGame()" />
         </div>
         <div class="todo">
             steal all the cool stuff from:

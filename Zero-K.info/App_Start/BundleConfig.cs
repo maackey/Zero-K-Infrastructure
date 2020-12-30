@@ -8,7 +8,7 @@ public class BundleConfig
             "~/Scripts/jquery-{version}.js",
             "~/Scripts/jquery.unobtrusive-ajax.js",
             "~/Scripts/browser-css.js",
-            "~/Scripts/jquery-ui.min.js",
+            "~/Content/jquery-ui-1.12.1/jquery-ui.min.js",
             "~/Scripts/jquery.ui.stars.js",
             "~/Scripts/jquery.qtip.min.js",
             "~/Scripts/jquery.ba-bbq.js",
@@ -38,7 +38,7 @@ public class BundleConfig
             "~/Styles/dark-hive/jquery-ui.css",
             "~/Styles/nicetitle.css",
             "~/Content/font-awesome.min.css"
-            //"~/Content/jquery-ui.css"
+            //"~/Content/jquery-ui-1.12.1/jquery-ui.min.css"
             ));
 
         

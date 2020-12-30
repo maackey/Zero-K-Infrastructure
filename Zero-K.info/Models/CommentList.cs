@@ -6,9 +6,10 @@ using ZkData;
 
 namespace ZeroKWeb.Models
 {
-  public class CommentList
-  {
-    public ForumThread Thread;
-    public object ActionData;
-  }
+	public class CommentList
+	{
+		public string Title;
+		public ForumThread Thread;
+		public object ActionData;
+	}
 }

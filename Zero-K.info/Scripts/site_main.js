@@ -526,6 +526,7 @@ function GlobalPageInit(root) {
         var url = $(el).data("autocomplete");
         var action = $(el).data("autocomplete-action");
 
+        console.log("autocomplete for element", el);
         $(el).autocomplete({
             minLength: 1,
             delay: 0,
