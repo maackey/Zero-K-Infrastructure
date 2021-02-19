@@ -1,0 +1,193 @@
+﻿<div class="map-search toggle-content">
+    <form id="ajaxScrollForm" class="mapfilters" method="post" action="@Url.Action("Index", "Maps")">
+        <div class="filtergroup">
+            <div class="filter switch3">
+                <input name="is1v1" />
+                <div class="slider"></div>
+                <div class="clickable left"><span>Non 1v1</span></div>
+                <div class="clickable right"><span>1v1 Only</span></div>
+            </div>
+            <div class="filter switch3">
+                <input name="ffa" />
+                <div class="slider"></div>
+                <div class="clickable left"><span>Non FFA</span></div>
+                <div class="clickable right"><span>FFA Only</span></div>
+            </div>
+            <div class="filter switch3">
+                <input name="isTeams" />
+                <div class="slider"></div>
+                <div class="clickable left"><span>Non Teams</span></div>
+                <div class="clickable right"><span>Teams Only</span></div>
+            </div>
+            <div class="filter switch3">
+                <input name="chicken" />
+                <div class="slider"></div>
+                <div class="clickable left"><span>Non Chicken</span></div>
+                <div class="clickable right"><span>Chicken Only</span></div>
+            </div>
+            <div class="filter switch3">
+                <input name="special" />
+                <div class="slider"></div>
+                <div class="clickable left"><span>Non Special</span></div>
+                <div class="clickable right"><span>Special Only</span></div>
+            </div>
+            <div class="filter switch3">
+                <input name="assymetrical" />
+                <div class="slider"></div>
+                <div class="clickable left"><span>Asymmetric</span></div>
+                <div class="clickable right"><span>Symmetric</span></div>
+            </div>
+            <div class="filter switch3">
+                <input name="elongated" />
+                <div class="slider"></div>
+                <div class="clickable left"><span>Oblong</span></div>
+                <div class="clickable right"><span>Square</span></div>
+            </div>
+
+            <br />
+            <label>Support Level (todo)</label>
+            <div class="slider-range" data-min="minMapSupportLevel" data-max="maxMapSupportLevel">
+                <div class="included-range"></div>
+                <div class="handle min-value" data-value="0"></div>
+                <div class="handle max-value" data-value="3"></div>
+                <input id="minMapSupportLevel" name="minMapSupportLevel" class="hidden" type="text" min="0" value="0" />
+                <input id="maxMapSupportLevel" name="maxMapSupportLevel" class="hidden" type="text" max="3" value="3" />
+            </div>
+
+        </div>
+        <div class="filtergroup">
+
+            @*<label for="mapSupportLevel">Support:</label>*@
+            @*<select id="mapSupportLevel" name="mapSupportLevel">
+                    <option value='0'>Unsupported</option>
+                    <option value='1'>Supported at Least</option>
+                    <option value='2' selected="selected">Featured &amp; MatchMaker</option>
+                    <option value='3'>MatchMaker Only</option>
+                </select>*@
+
+            @*<label for="mapSize">Size:</label>*@
+            <select id="mapSize" name="size">
+                <option value="">Any Size</option>
+                <option value='1'>Small Only</option>
+                <option value='2'>Medium Only</option>
+                <option value='3'>Large Only</option>
+            </select>
+
+            @*<label for="mapSeaAmount">Water Ratio:</label>*@
+            <select id="mapSeaAmount" name="sea">
+                <option value="">Any Water</option>
+                <option value="1">Land Only</option>
+                <option value="2">Coastal</option> @*Both Land &amp; Sea*@
+                <option value="3">Sea Only</option>
+            </select>
+
+            @*<label for="mapTerrain">Terrain Type:</label>*@
+            <select id="mapTerrain" name="hills">
+                <option value="">Any Terrain</option>
+                <option value="1">Flat Only</option>
+                <option value="2">Hills Only</option>
+                <option value="3">Cliffs Only</option>
+            </select>
+
+            @*<label for="orderBy">Sort By:</label>*@
+            <select id="order" name="order">
+                <option value="0">Sort by Latest</option>
+                <option value="1">Sort by Rating</option>
+                <option value="2">Sort by Downloads</option>
+                <option value="3">Sort by Latest Comments</option>
+            </select>
+
+            <input type="text" id="search" name="search" class="ui-autocomplete-input" placeholder="Specific Map or Author"
+                   autocomplete="off" data-autocomplete="/Autocomplete/Maps" data-autocomplete-action="submit" />
+
+            <input type="submit" id="submit" value="Search" onclick="UpdateMapHeader()" />
+        </div>
+    </form>
+    <h2 class="toggle" onclick="ToggleExtra('ajaxScrollForm', this)">
+        <i class="toggle-indicator fa fa-caret-up"></i>
+        <span id="titletype">Latest</span> Maps
+
+        <span id="tag_size" class="filtertag"></span>
+        <span id="tag_water" class="filtertag"></span>
+        <span id="tag_terrain" class="filtertag"></span>
+
+        <span id="tag_duel" class="filtertag"></span>
+        <span id="tag_ffa" class="filtertag"></span>
+        <span id="tag_team" class="filtertag"></span>
+        <span id="tag_chicken" class="filtertag"></span>
+        <span id="tag_special" class="filtertag"></span>
+        <span id="tag_symmetry" class="filtertag"></span>
+        <span id="tag_aspect" class="filtertag"></span>
+
+        <span id="tag_search" class="filtertag"></span>
+    </h2>
+</div>
+
+<script type="text/javascript">
+    function UpdateMapHeader() {
+        $("#tag_search").text('"' + $("#search").val() + '"');
+
+        switch ($("#order").val()) {
+            case "0": $("#titletype").text("Latest"); break;
+            case "1": $("#titletype").text("Highly Rated"); break;
+            case "2": $("#titletype").text("Popular"); break;
+            case "3": $("#titletype").text("Trending"); break;
+            default: $("#titletype").text(""); break;
+        }
+
+        switch ($("#mapSize").val()) {
+            case "1": $("#tag_size").text("Small"); break;
+            case "2": $("#tag_size").text("Medium"); break;
+            case "3": $("#tag_size").text("Large"); break;
+            default: $("#tag_size").text(""); break;
+        }
+        switch ($("#mapSeaAmount").val()) {
+            case "1": $("#tag_water").text("Land"); break;
+            case "2": $("#tag_water").text("Coastal"); break;
+            case "3": $("#tag_water").text("Water"); break;
+            default: $("#tag_water").text(""); break;
+        }
+        switch ($("#mapTerrain").val()) {
+            case "1": $("#tag_terrain").text("Flat"); break;
+            case "2": $("#tag_terrain").text("Hills"); break;
+            case "3": $("#tag_terrain").text("Cliffs"); break;
+            default: $("#tag_terrain").text(""); break;
+        }
+
+        switch ($("input[name=is1v1]").val()) {
+            case "true": $("#tag_duel").text("1v1"); break;
+            case "false": $("#tag_duel").text("No 1v1"); break;
+            default: $("#tag_duel").text(""); break;
+        }
+        switch ($("input[name=isTeams]").val()) {
+            case "true": $("#tag_team").text("Teams"); break;
+            case "false": $("#tag_team").text("No Teams"); break;
+            default: $("#tag_team").text(""); break;
+        }
+        switch ($("input[name=ffa]").val()) {
+            case "true": $("#tag_ffa").text("FFA"); break;
+            case "false": $("#tag_ffa").text("No FFA"); break;
+            default: $("#tag_ffa").text(""); break;
+        }
+        switch ($("input[name=chicken]").val()) {
+            case "true": $("#tag_chicken").text("Chicken"); break;
+            case "false": $("#tag_chicken").text("No Chicken"); break;
+            default: $("#tag_chicken").text(""); break;
+        }
+        switch ($("input[name=special]").val()) {
+            case "true": $("#tag_special").text("Special"); break;
+            case "false": $("#tag_special").text("No Special"); break;
+            default: $("#tag_special").text(""); break;
+        }
+        switch ($("input[name=assymetrical]").val()) {
+            case "true": $("#tag_symmetry").text("Asymmetric"); break;
+            case "false": $("#tag_symmetry").text("Symmetric"); break;
+            default: $("#tag_symmetry").text(""); break;
+        }
+        switch ($("input[name=elongated]").val()) {
+            case "true": $("#tag_aspect").text("Square"); break;
+            case "false": $("#tag_aspect").text("Oblong"); break;
+            default: $("#tag_aspect").text(""); break;
+        }
+    }
+</script>

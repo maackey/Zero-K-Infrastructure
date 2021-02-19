@@ -1,5 +1,5 @@
 ﻿
-var isBusy = false;
+var isBusy = 0;
 var ajaxScrollCount = 40;
 var ajaxScrollOffset = 40;
 var ajaxScrollEnabled = true;
@@ -276,11 +276,15 @@ function InitToggleSwitch() {
             slider.toggleClass("right");
             input.val("true");
         }
+
         if (slider.hasClass("left") && slider.hasClass("right")) {
             // one side was active, and other side was clicked
             parent.removeClass("active");
             slider.removeClass("left");
             slider.removeClass("right");
+            input.val("");
+        } else if (!slider.hasClass("left") && !slider.hasClass("right")) {
+            // no side is active anymore
             input.val("");
         }
     });
@@ -572,11 +576,11 @@ function GlobalPageInit(root) {
 // setup busy indicator
 $(function() {
     $(document).ajaxStart(function () {
-        isBusy = true;
-        setTimeout("if (isBusy) $('#busy').show('fade');", 500);
+        isBusy += 1;
+        setTimeout("if (isBusy > 0) $('#busy').show('fade');", 500);
     });
     $(document).ajaxStop(function () {
-        isBusy = false;
-        $("#busy").hide();
+        isBusy -= 1;
+        if (isBusy <= 0) $("#busy").fadeOut(1000);
     });
 })

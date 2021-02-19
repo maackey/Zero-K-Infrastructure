@@ -12,6 +12,7 @@ nav {
     border: 1px solid @navigation-bg;
     border-bottom: 1px solid @highlight;
     margin: 0;
+    z-index: 1000;
 
     .menu:hover {
         background: @navigation-bg;
@@ -29,7 +30,7 @@ nav {
         margin-right: 0;
     }
 
-    span {
+    .submenu span {
         display: none;
         position: absolute;
         top: 100%;
@@ -174,6 +175,57 @@ nav {
             }
         }
     }
+
+    #searchfilters {
+        display: none;
+        background: linear-gradient(fadeout(@highlight, 50%), rgba(0,0,0,0.5) 1em);
+    }
+    #searchfilterscreen {
+        display: none;
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        z-index: 999;
+    }
+
+    .search-default {
+        display: flex;
+        input {
+            border-top-right-radius: 0;
+            border-bottom-right-radius: 0;
+        }
+        button {
+            width: 3em;
+            border-top-left-radius: 0;
+            border-bottom-left-radius: 0;
+        }
+    }
+}
+
+
+.ui-autocomplete {
+    /*position: absolute;*/
+    background: rgba(0,0,0,0.9);
+    top: 0;
+    left: 0;
+    right: -100px;
+    max-width: 600px;
+    max-height: 300px;
+    padding: 0;
+    cursor: default;
+    overflow-x: hidden;
+    overflow-y: auto;
+    z-index: 9000;
+
+    li {
+        padding: 0.5em;
+    }
+
+    li:hover {
+        background: fadeout(@highlight, 80%);
+        transition: 0.5s;
+        cursor: pointer;
+    }
 }
 
 // affix menu after scrolling down
@@ -183,7 +235,6 @@ nav.nav-affixed {
     width: 100%;
     padding: 0;
     margin: 0;
-    z-index: 1000;
     transition: 1s;
 
     .nav-logo {

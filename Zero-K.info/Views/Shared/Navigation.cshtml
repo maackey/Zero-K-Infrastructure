@@ -7,57 +7,57 @@
             <img src="/img/zk_logo.png" alt="Zero K" />&nbsp;
         </a>
     </div><div class="login menu">
-    @if (!Global.IsAccountAuthorized)
-    {
-        <i class="fa fa-user-circle"></i><div class="nav-text">Login</div>
-        <div class="submenu">
-            <form id="login" method="post" action="@Url.Action("Logon", "Home")">
-                <input id="username" type="text" name="username" placeholder="Username" autocomplete="off" />
-                <input id="password" type="password" name="password" placeholder="Password" />
-                <input type="submit" value="Login" />
-                <hr />
-                @* TODO: fix jquery ui breaking styles :'( *@
-                <button type="submit">
-                    <i class="fa fa-steam"></i> Login with STEAM
-                </button>
-                <input type="hidden" name="referer" value="@(Request["ReturnUrl"] ?? Request.Url?.ToString())" />
-            </form>
-        </div>
-
-    }
-    else
-    {
-        string logoutUrl = "";
-        if (Global.IsLobbyAccess)
+        @if (!Global.IsAccountAuthorized)
         {
-            logoutUrl = Url.Action("Logout", "Home") + "@logout";
+            <i class="fa fa-user-circle"></i><div class="nav-text">Login</div>
+            <div class="submenu">
+                <form id="login" method="post" action="@Url.Action("Logon", "Home")">
+                    <input id="username" type="text" name="username" placeholder="Username" autocomplete="off" />
+                    <input id="password" type="password" name="password" placeholder="Password" />
+                    <input type="submit" value="Login" />
+                    <hr />
+                    @* TODO: fix jquery ui breaking styles :'( *@
+                    <button type="submit">
+                        <i class="fa fa-steam"></i> Login with STEAM
+                    </button>
+                    <input type="hidden" name="referer" value="@(Request["ReturnUrl"] ?? Request.Url?.ToString())" />
+                </form>
+            </div>
+
         }
         else
         {
-            logoutUrl = Url.Action("Logout", "Home", new { referer = Request.Url });
+            string logoutUrl = "";
+            if (Global.IsLobbyAccess)
+            {
+                logoutUrl = Url.Action("Logout", "Home") + "@logout";
+            }
+            else
+            {
+                logoutUrl = Url.Action("Logout", "Home", new { referer = Request.Url });
+            }
+
+            @HtmlHelperExtensions.PrintAccount(Global.Account)
+
+            <div class="submenu">
+                @if (Global.Account.HasKudos)
+                {
+                    <span nicetitle="Metagame currency that you can get by donating to Zero-K. You can use it to get access to unique commander decorations"> | Kudos: @(Global.Account.KudosGained - Global.Account.KudosSpent)</span>
+                }
+
+                @if (MiscVar.PlanetWarsMode != PlanetWarsModes.AllOffline)
+                {
+                    <span> | @Html.PrintMetal(Global.Account) | @Html.PrintDropships(Global.Account) | @Html.PrintBombers(Global.Account) | @Html.PrintWarps(Global.Account)</span>
+                }
+
+                <a href="@Url.Action("Index", "Home")"><i class="fa fa-home"></i> Home<span>There's no place like it</span></a>
+                <a href="@Url.Action("UnlockList", "My")"><i class="fa fa-unlock"></i> Unlocks<span>Cool gear to accessorize your commanders</span></a>
+                <a href="@Url.Action("Commanders", "My")"><i class="fa fa-male"></i> Commanders<span>Cool mechs you can modify to master the battlefield</span></a>
+                <a href="@Url.Action("UserVotes", "Poll", new { id = Global.AccountID })"><i class="fa fa-bar-chart"></i> Polls<span>Voting is important</span></a>
+                <a href="@Url.Action("Index", "Contributions")"><i class="fa fa-dollar"></i> Donations<span>Help cover the server costs</span></a>
+                <a href="@logoutUrl"><i class="fa fa-sign-out"></i> Logout<span>You'll be back for more sooner or later...</span></a>
+            </div>
         }
-
-        @HtmlHelperExtensions.PrintAccount(Global.Account)
-
-          <div class="submenu">
-              @if (Global.Account.HasKudos)
-              {
-                  <span nicetitle="Metagame currency that you can get by donating to Zero-K. You can use it to get access to unique commander decorations"> | Kudos: @(Global.Account.KudosGained - Global.Account.KudosSpent)</span>
-              }
-
-              @if (MiscVar.PlanetWarsMode != PlanetWarsModes.AllOffline)
-              {
-                  <span> | @Html.PrintMetal(Global.Account) | @Html.PrintDropships(Global.Account) | @Html.PrintBombers(Global.Account) | @Html.PrintWarps(Global.Account)</span>
-              }
-
-              <a href="@Url.Action("Index", "Home")"><i class="fa fa-home"></i> Home<span>There's no place like it</span></a>
-              <a href="@Url.Action("UnlockList", "My")"><i class="fa fa-unlock"></i> Unlocks<span>Cool gear to accessorize your commanders</span></a>
-              <a href="@Url.Action("Commanders", "My")"><i class="fa fa-male"></i> Commanders<span>Cool mechs you can modify to master the battlefield</span></a>
-              <a href="@Url.Action("UserVotes", "Poll", new { id = Global.AccountID })"><i class="fa fa-bar-chart"></i> Polls<span>Voting is important</span></a>
-              <a href="@Url.Action("Index", "Contributions")"><i class="fa fa-dollar"></i> Donations<span>Help cover the server costs</span></a>
-              <a href="@logoutUrl"><i class="fa fa-sign-out"></i> Logout<span>You'll be back for more sooner or later...</span></a>
-          </div>
-    }
     </div><div class="play menu">
         <i class="fa fa-play"></i><div class="nav-text">Play</div>
         <div class="submenu">
@@ -104,16 +104,6 @@
             <a href="/Wiki/Media#Screenshots"><i class="fa fa-camera"></i> Screenshots<span>A picture may have a thousand units, vying for victory</span></a>
             <a href="/Wiki/Media#Videos"><i class="fa fa-video-camera"></i> Videos<span>Sit back with some popcorn to fully enjoy the explosions</span></a>
             <a href="/Wiki/Fanart"><i class="fa fa-paint-brush"></i> Fanart<span>Show the world your favorite game</span></a>
-        </div>
-    </div><div class="search menu">
-        <i class="fa fa-search"></i><div class="nav-text">Search</div>
-        <div class="submenu">
-            <form action="@Url.Action("SubmitSearch","Forum")" method="POST">
-                <input type="text" name="keywords" id="keywords" placeholder="Search" data-autocomplete="@Url.Action("Index", "Autocomplete")" data-autocomplete-action="goto" />
-                <button type="submit">
-                    <i class="fa fa-search"></i>
-                </button>
-            </form>
         </div>
     </div>
 </nav>

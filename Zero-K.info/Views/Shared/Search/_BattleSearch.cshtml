@@ -1,0 +1,87 @@
+﻿<div class="battle-search toggle-content">
+    <form id="ajaxScrollForm" class="battlefilters" action="@Url.Action("Index")" method="post">
+        <div class="filtergroup">
+
+            <label>Game Duration</label>
+            <div class="slider-range" data-min="MinDuration" data-max="MaxDuration" data-softcap="60">
+                <div class="included-range"></div>
+                <div class="handle min-value" data-value="0"></div>
+                <div class="handle max-value" data-value="60"></div>
+            </div>
+            <input id="MinDuration" name="MinDuration" class="hidden" type="text" min="0" />
+            <input id="MaxDuration" name="MaxDuration" class="hidden" type="text" max="60" />
+
+            <label>Player Count</label>
+            <div class="slider-range" data-min="PlayersFrom" data-max="PlayersTo" data-softcap="32">
+                <div class="included-range"></div>
+                <div class="handle min-value" data-value="0"></div>
+                <div class="handle max-value" data-value="32"></div>
+            </div>
+            <input id="PlayersFrom" name="PlayersFrom" class="hidden" type="text" min="0" />
+            <input id="PlayersTo" name="PlayersTo" class="hidden" type="text" max="32" />
+
+            <label>Player Ranks</label>
+            <div class="slider-range" data-min="MinRank" data-max="MaxRank">
+                <div class="included-range"></div>
+                <div class="handle min-value" data-value="0" data-display="minRank"></div>
+                <div class="handle max-value" data-value="7" data-display="maxRank"></div>
+            </div>
+            <input id="MinRank" name="MinRank" class="hidden" type="text" min="0" />
+            <input id="MaxRank" name="MaxRank" class="hidden" type="text" max="7" />
+
+            <div class="switch3">
+                <input name="Mission" />
+                <div class="slider"></div>
+                <div class="clickable left"><span>Non Mission</span></div>
+                <div class="clickable right"><span>Mission Only</span></div>
+            </div>
+            <div class="switch3">
+                <input name="Bots" />
+                <div class="slider"></div>
+                <div class="clickable left"><span>No Bots</span></div>
+                <div class="clickable right"><span>Bots Present</span></div>
+            </div>
+
+        </div>
+        <div class="filtergroup">
+            <div class="hidden">
+                <input id="DateFrom" name="DateFrom" type="datetime" placeholder="Newer Than" />
+                <input id="DateTo" name="DateTo" type="datetime" placeholder="Older Than" />
+            </div>
+            @*<div class="corners-wrapper">
+                    <div class="corners corners-top"></div>
+                    <div class="corners corners-bottom"></div>
+                </div>*@
+            <input id="Title" name="Title" type="text" placeholder="Room Title" />
+            <input id="Map" name="Map" type="text" placeholder="Map" class="ui-autocomplete-input" autocomplete="off" data-autocomplete="/Autocomplete/Maps" data-autocomplete-action="submit" />
+
+            @*<label>Supported Maps</label>
+                <div class="slider-range" data-min="MinMapSupport" data-max="MaxMapSupport">
+                    <div class="included-range"></div>
+                    <div class="handle min-value" data-value="0"></div>
+                    <div class="handle max-value" data-value="3"></div>
+                </div>*@
+
+            @*<label for="MinRank">At least Rank</label>
+                @Html.EnumDropDownListFor(x => x.MinRank)
+
+                <label for="MaxRank">At most Rank</label>
+                @Html.EnumDropDownListFor(x => x.MaxRank)*@
+
+            @*@using (var db = new ZkDataContext())
+            {
+                <label for="UserId">UserIds</label>
+                @Html.MultiSelectFor(x => x.UserId, Url.Action("UsersNoLink", "Autocomplete"), x => Html.PrintAccount(db.Accounts.Find(x)));
+            }*@
+            <input name="sa" value="Search" type="submit" />
+
+            @*<input id="UserId" name="" type="text" placeholder="Players" class="ui-autocomplete-input" autocomplete="off" data-autocomplete="/Autocomplete/UsersNoLink" data-autocomplete-action="add" />
+                <div id="UserIdplayers"></div>*@
+
+            @*Victory: @Html.EnumDropDownListFor(x => x.Victory)*@
+
+            @*@if (Model.UserId != null) { Html.Raw(string.Concat(Model.UserId.Select(x => Html.Hidden("UserId", x)).ToList())); }*@
+        </div>
+    </form>
+    <h2 class="toggle" onclick="ToggleExtra('ajaxScrollForm', this)"><i class="toggle-indicator fa fa-caret-up"></i> Battles</h2>
+</div>

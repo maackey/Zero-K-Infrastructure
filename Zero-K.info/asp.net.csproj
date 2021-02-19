@@ -249,12 +249,14 @@
     <Compile Include="Models\PartialViewEngine.cs" />
     <Compile Include="ResourceList.aspx.cs">
       <DependentUpon>ResourceList.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="ResourceList.aspx.designer.cs">
       <DependentUpon>ResourceList.aspx</DependentUpon>
     </Compile>
     <Compile Include="ErrorReports.aspx.cs">
       <DependentUpon>ErrorReports.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="ErrorReports.aspx.designer.cs">
       <DependentUpon>ErrorReports.aspx</DependentUpon>
@@ -272,6 +274,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ResourceDetail.aspx.cs">
       <DependentUpon>ResourceDetail.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="ResourceDetail.aspx.designer.cs">
       <DependentUpon>ResourceDetail.aspx</DependentUpon>
@@ -530,6 +533,10 @@
     <Content Include="Styles\less\administration.less" />
     <Content Include="Styles\less\sliderrange.less" />
     <Content Include="Styles\less\splash.less" />
+    <Content Include="Views\Shared\Search\_MapSearch.cshtml" />
+    <Content Include="Views\Shared\Search\_DefaultSearch.cshtml" />
+    <Content Include="Views\Shared\Search\_BattleSearch.cshtml" />
+    <Content Include="Styles\less\battles.less" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\_ViewStart.cshtml" />

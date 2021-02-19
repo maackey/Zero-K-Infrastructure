@@ -10,7 +10,7 @@ namespace ZeroKWeb.Models
     {
         public PartialViewEngine()
         {
-            string[] partialSearchPaths = new[] { "~/Views/Shared/Modules/{0}.cshtml" };
+            string[] partialSearchPaths = new[] { "~/Views/Shared/Modules/{0}.cshtml", "~/Views/Shared/Search/{0}.cshtml" };
             base.PartialViewLocationFormats = base.PartialViewLocationFormats.Union(partialSearchPaths).ToArray();
         }
     }
